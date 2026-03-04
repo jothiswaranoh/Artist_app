@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       get "profile", to: "sessions#me"
       patch "profile", to: "sessions#update_profile"
       delete "profile", to: "sessions#delete_profile"
+      get "me", to: "sessions#me"
 
       # Dashboard
       get "dashboard", to: "dashboard#index"
@@ -42,6 +43,7 @@ Rails.application.routes.draw do
       get "artists/:id/services", to: "services#artist_services"
       get "artists/:id/availability", to: "availabilities#artist_availability"
       
+      get "artists/:artist_id/availability", to: "availabilities#artist_availability"
     end
   end
 end

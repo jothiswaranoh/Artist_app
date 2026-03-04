@@ -7,6 +7,5 @@ class Booking < ApplicationRecord
   has_one :review, dependent: :destroy
 
   STATUSES = %w[pending confirmed completed cancelled].freeze
-
   validates :status, inclusion: { in: STATUSES }, allow_nil: true
 end

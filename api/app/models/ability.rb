@@ -25,6 +25,7 @@ class Ability
       can :manage, Availability, artist_profile: { user_id: user.id }
       # Dashboard access
       can :read, :dashboard
+      can :read, :all
     else
       # Customer
       can :manage, User, id: user.id
