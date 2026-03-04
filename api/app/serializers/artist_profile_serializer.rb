@@ -13,7 +13,7 @@ class ArtistProfileSerializer < ActiveModel::Serializer
              :created_at
 
   def name
-    object.user&.email # change if you have name column
+    object.user&.name # change if you have name column
   end
 
   def email
@@ -21,14 +21,14 @@ class ArtistProfileSerializer < ActiveModel::Serializer
   end
 
   def services_count
-    object.services.size
+    object.services.count
   end
 
   def bookings_count
-    object.bookings.size
+    object.bookings.count
   end
 
   def reviews_count
-    object.reviews.size
+    object.reviews.count
   end
 end

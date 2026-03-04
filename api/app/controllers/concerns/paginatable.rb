@@ -21,7 +21,6 @@ module Paginatable
       success: true,
       message: message,
       data: serialized_data,
-      meta: pagination_meta(scope)
     }, status: status
   end
 end

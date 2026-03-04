@@ -7,7 +7,7 @@ module Api
       def index
         authorize! :read, ArtistProfile
         profiles = paginate(collection)
-        render_paginated_success(profiles, message: 'Artist profiles retrieved successfully', serialized_data: profiles.map { |p| serialize_profile(p) })
+        render_paginated_success(profiles, message: 'Artist profiles retrieved successfully')
       end
 
       def show
@@ -16,18 +16,6 @@ module Api
       end
 
       private
-
-      def serialize_profile(profile)
-        profile.as_json(
-          include: {
-            user: { only: [:id, :email, :role] },
-            services: { only: [:id, :name, :description, :price, :duration_minutes, :artist_profile_id, :service_category_id] }
-          }
-        ).merge(
-          'bookings_count' => profile.bookings.count,
-          'reviews_count'  => profile.reviews.count
-        )
-      end
 
       def artist_profile_params
         params.require(:artist_profile).permit(:name, :bio, :experience_years, :base_price, :city)

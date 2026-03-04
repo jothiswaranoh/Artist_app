@@ -27,7 +27,7 @@ module Api
       end
 
       def collection
-        Availability.all.order(available_date: :asc)
+        ArtistProfile .includes(:user, :services, :bookings, :reviews) .order(created_at: :desc)
       end
     end
   end
