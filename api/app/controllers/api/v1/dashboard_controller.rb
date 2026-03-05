@@ -39,6 +39,12 @@ module Api
         )
       end
 
+      # GET /api/v1/dashboard/summary
+      def summary
+        stats = Dashboard::SummaryService.new(current_user).call
+        render_success(data: stats, message: "Dashboard summary retrieved successfully")
+      end
+
       private
 
       def admin_stats
@@ -70,8 +76,14 @@ module Api
           total_reviews: Review.where(artist_profile_id: profile.id).count,
           average_rating: Review.where(artist_profile_id: profile.id).average(:rating)&.round(1) || 0,
           total_revenue: Payment.joins(:booking).where(bookings: { artist_profile_id: profile.id }).sum(:amount),
+          upcoming_bookings_count: Booking.where(artist_profile_id: profile.id, status: ["pending", "confirmed"])
+                                     .where("booking_date >= ?", Date.today).count,
           upcoming_bookings: Booking.where(artist_profile_id: profile.id, status: ["pending", "confirmed"])
-                                    .where("booking_date >= ?", Date.today).count
+                                    .where("booking_date >= ?", Date.today).count,
+          recent_bookings: ActiveModelSerializers::SerializableResource.new(
+            Booking.where(artist_profile_id: profile.id).order(created_at: :desc).limit(5),
+            each_serializer: BookingSerializer
+          ).as_json
         }
       end
 
