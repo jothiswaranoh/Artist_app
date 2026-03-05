@@ -62,7 +62,6 @@ module Api
         authorize! :destroy, @booking
         render_success(message: 'Booking deleted successfully')
       end
-
       private
 
       def booking_params
