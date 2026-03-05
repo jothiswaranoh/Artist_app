@@ -70,8 +70,12 @@ module Api
           total_reviews: Review.where(artist_profile_id: profile.id).count,
           average_rating: Review.where(artist_profile_id: profile.id).average(:rating)&.round(1) || 0,
           total_revenue: Payment.joins(:booking).where(bookings: { artist_profile_id: profile.id }).sum(:amount),
-          upcoming_bookings: Booking.where(artist_profile_id: profile.id, status: ["pending", "confirmed"])
-                                    .where("booking_date >= ?", Date.today).count
+          upcoming_bookings_count: Booking.where(artist_profile_id: profile.id, status: ["pending", "confirmed"])
+                                     .where("booking_date >= ?", Date.today).count,
+          recent_bookings: ActiveModelSerializers::SerializableResource.new(
+            Booking.where(artist_profile_id: profile.id).order(created_at: :desc).limit(5),
+            each_serializer: BookingSerializer
+          ).as_json
         }
       end
 
