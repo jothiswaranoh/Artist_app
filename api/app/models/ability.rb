@@ -13,8 +13,8 @@ class Ability
       can :manage, ArtistProfile, user_id: user.id
       # Own services
       can :manage, Service, artist_profile: { user_id: user.id }
-      can :create, Service  # Allow creating (controller assigns artist_profile_id)
-      can :read, Service    # Allow listing own services
+      can :create, Service
+      can :read, Service
       # Own bookings (received as an artist)
       can :read, Booking, artist_profile: { user_id: user.id }
       can :update, Booking, artist_profile: { user_id: user.id }
@@ -25,6 +25,7 @@ class Ability
       can :manage, Availability, artist_profile: { user_id: user.id }
       # Dashboard access
       can :read, :dashboard
+      can :read, :all
     else
       # Customer
       can :manage, User, id: user.id
