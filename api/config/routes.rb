@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       get "dashboard", to: "dashboard#index"
       get "dashboard/admin", to: "dashboard#admin"
       get "dashboard/artist", to: "dashboard#artist"
+      get "dashboard/summary", to: "dashboard#summary"
 
       # Admin Dashboard APIs
       namespace :admin do
