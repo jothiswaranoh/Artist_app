@@ -56,6 +56,17 @@ module Api
         end
       end
 
+
+      # DELETE /api/v1/profile
+      def delete_profile
+        user = current_user
+        user.update(status: "inactive")
+        Booking.where(customer_id: user.id, status: "pending").update_all(status: "cancelled")
+        render_success(
+          message: "Account deleted successfully"
+          )
+        end
+        
       private
 
       def profile_params

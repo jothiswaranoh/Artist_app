@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       get "me", to: "sessions#me"
       get "profile", to: "sessions#me"
       patch "profile", to: "sessions#update_profile"
+      delete "profile", to: "sessions#delete_profile"
 
       # Dashboard
       get "dashboard", to: "dashboard#index"
