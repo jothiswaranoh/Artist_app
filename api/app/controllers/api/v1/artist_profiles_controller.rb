@@ -11,9 +11,22 @@ module Api
       end
 
       def show
-        authorize! :read, @resource
-        render_success(data: @resource,
-        message: 'Artist profile retrieved successfully')
+         authorize! :read, ArtistProfile
+
+         artist = ArtistProfile
+             .includes(:user, :services, :reviews)
+             .find_by(id: params[:id])
+
+         return render_error(message: "Artist not found", status: :not_found) unless artist
+
+         render json: {
+         success: true,
+         message: "Artist details retrieved successfully",
+         data: ActiveModelSerializers::SerializableResource.new(
+          artist,
+          serializer: ArtistDetailSerializer
+         )
+        }
       end
 
       private

@@ -22,8 +22,7 @@ Rails.application.routes.draw do
       resources :services
       resources :service_categories
       resources :organizations
-      resources :artists, only: [:show]
-
+      get "artists/:id", to: "artist_profiles#show"
       resources :bookings do
         collection do
           get :my_bookings
