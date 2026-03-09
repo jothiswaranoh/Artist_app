@@ -1,6 +1,17 @@
 # Setup Artist & Customer
-artist_user = User.find_by(email: 'artist@test.com')
-artist_profile = artist_user.artist_profile
+artist_user = User.find_or_create_by!(email: 'artist@test.com') do |u|
+  u.password = 'password123'
+  u.role = 'artist'
+end
+
+artist_profile = artist_user.artist_profile || artist_user.create_artist_profile!(
+  bio: "Professional makeup artist specializing in bridal and party looks.",
+  base_price: 5000,
+  city: "Mumbai",
+  experience_years: 5,
+  is_approved: true
+)
+
 customer_user = User.find_or_create_by!(email: 'customer@test.com') do |u|
   u.password = 'password123'
   u.role = 'customer'
