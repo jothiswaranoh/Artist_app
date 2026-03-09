@@ -40,7 +40,34 @@ module Api
         )
       end
 
+
+      # PATCH /api/v1/profile
+      def update_profile
+        if current_user.update(profile_params)
+          render_success(
+            data: current_user,
+            message: "Profile updated successfully"
+          )
+        else
+          render_error(
+            message: current_user.errors.full_messages,
+            status: :unprocessable_entity
+          )
+        end
+      end
+
       private
+
+      def profile_params
+        params.permit(
+          :name,
+          :phone,
+          :address,
+          :preferences,
+          :password,
+          :password_confirmation
+        )
+      end
 
       def login_params
         params.permit(:email, :password)

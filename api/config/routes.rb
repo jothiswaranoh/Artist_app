@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       delete "logout", to: "sessions#destroy"
       get "me", to: "sessions#me"
       get "profile", to: "sessions#me"
+      patch "profile", to: "sessions#update_profile"
 
       # Dashboard
       get "dashboard", to: "dashboard#index"
