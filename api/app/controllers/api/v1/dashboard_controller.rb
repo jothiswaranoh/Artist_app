@@ -39,50 +39,24 @@ module Api
         )
       end
 
+      # GET /api/v1/dashboard/summary
+      def summary
+        stats = Dashboard::SummaryService.new(current_user).call
+        render_success(data: stats, message: "Dashboard summary retrieved successfully")
+      end
+
       private
 
       def admin_stats
-        {
-          total_users: User.count,
-          active_users: User.where(status: "active").count,
-          total_artists: ArtistProfile.count,
-          approved_artists: ArtistProfile.where(is_approved: true).count,
-          total_bookings: Booking.count,
-          pending_bookings: Booking.where(status: "pending").count,
-          confirmed_bookings: Booking.where(status: "confirmed").count,
-          completed_bookings: Booking.where(status: "completed").count,
-          total_services: Service.count,
-          total_reviews: Review.count,
-          total_revenue: Payment.sum(:amount),
-          total_organizations: (Organization.count rescue 0)
-        }
+        Dashboard::AdminStatsService.new(current_user).call
       end
 
       def artist_stats
-        profile = current_user.artist_profile
-        return {} unless profile
-
-        {
-          total_bookings: Booking.where(artist_profile_id: profile.id).count,
-          pending_bookings: Booking.where(artist_profile_id: profile.id, status: "pending").count,
-          completed_bookings: Booking.where(artist_profile_id: profile.id, status: "completed").count,
-          total_services: Service.where(artist_profile_id: profile.id).count,
-          total_reviews: Review.where(artist_profile_id: profile.id).count,
-          average_rating: Review.where(artist_profile_id: profile.id).average(:rating)&.round(1) || 0,
-          total_revenue: Payment.joins(:booking).where(bookings: { artist_profile_id: profile.id }).sum(:amount),
-          upcoming_bookings: Booking.where(artist_profile_id: profile.id, status: ["pending", "confirmed"])
-                                    .where("booking_date >= ?", Date.today).count
-        }
+        Dashboard::ArtistStatsService.new(current_user).call
       end
 
       def customer_stats
-        {
-          total_bookings: Booking.where(customer_id: current_user.id).count,
-          pending_bookings: Booking.where(customer_id: current_user.id, status: "pending").count,
-          completed_bookings: Booking.where(customer_id: current_user.id, status: "completed").count,
-          total_spent: Payment.joins(:booking).where(bookings: { customer_id: current_user.id }).sum(:amount),
-          total_reviews: Review.where(customer_id: current_user.id).count
-        }
+        Dashboard::CustomerStatsService.new(current_user).call
       end
     end
   end
