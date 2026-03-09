@@ -4,10 +4,25 @@ module Api
       include Crudable
       load_and_authorize_resource
 
+      # GET /api/v1/artists
       def index
-        authorize! :read, ArtistProfile
-        profiles = paginate(collection)
-        render_paginated_success(profiles, message: 'Artist profiles retrieved successfully')
+        artists = ArtistProfile
+                   .where(is_approved: true)
+                   .includes(:services)
+
+      # search
+        if params[:search].present?
+          artists = artists.where("city ILIKE ?", "%#{params[:search]}%")
+        end
+
+        artists = artists.order(created_at: :desc)
+
+        paginated_artists = paginate(artists)
+        
+        render_success(
+          data: paginated_artists,
+          message: "Artists retrieved successfully"
+        )
       end
 
       def show
