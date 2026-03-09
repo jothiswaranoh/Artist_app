@@ -3,82 +3,93 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 interface ServiceCardProps {
-    name: string;
-    artist: string;
-    price: string;
-    duration: string;
-    category: string;
-    rating: number;
-    categoryColor: string;
-    onPress?: () => void;
+  name: string;
+  artist?: string;
+  description?: string;
+  price: string | number;
+  duration: string;
+  timesBooked?: number;
+  rating: number;
+  icon?: React.ComponentProps<typeof Ionicons>["name"];
+  iconColor?: string;
+  onPress?: () => void;
 }
 
 export default function ServiceCard({
-    name,
-    artist,
-    price,
-    duration,
-    category,
-    rating,
-    categoryColor,
-    onPress,
+  name,
+  artist,
+  description,
+  price,
+  duration,
+  timesBooked,
+  rating,
+  icon = "sparkles",
+  iconColor = "#3b82f6",
+  onPress,
 }: ServiceCardProps) {
-    return (
-        <TouchableOpacity
-            className="bg-dark-700 rounded-2xl p-4 mb-3 border border-white/5"
-            onPress={onPress}
-            activeOpacity={0.7}
+  return (
+    <TouchableOpacity
+      className="bg-dark-700 rounded-2xl p-4 mb-3 border border-white/5"
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      <View className="flex-row items-start gap-x-3 mb-3">
+        <View
+          className="w-10 h-10 rounded-xl items-center justify-center"
+          style={{ backgroundColor: `${iconColor}18` }}
         >
-            <View className="flex-row items-start gap-x-3">
-                {/* Icon */}
-                <View
-                    className="w-12 h-12 rounded-xl items-center justify-center"
-                    style={{ backgroundColor: `${categoryColor}18` }}
-                >
-                    <Ionicons name="sparkles" size={22} color={categoryColor} />
-                </View>
-
-                {/* Content */}
-                <View className="flex-1">
-                    <Text className="text-white text-sm font-bold" numberOfLines={1}>{name}</Text>
-                    <View className="flex-row items-center gap-x-1 mt-1">
-                        <Ionicons name="brush-outline" size={11} color="#64748b" />
-                        <Text className="text-slate-400 text-xs">{artist}</Text>
-                    </View>
-                    <View className="flex-row items-center gap-x-3 mt-2">
-                        <View
-                            className="px-2.5 py-0.5 rounded-full border"
-                            style={{
-                                backgroundColor: `${categoryColor}12`,
-                                borderColor: `${categoryColor}30`,
-                            }}
-                        >
-                            <Text className="text-[10px] font-semibold" style={{ color: categoryColor }}>
-                                {category}
-                            </Text>
-                        </View>
-                        <View className="flex-row items-center gap-x-0.5">
-                            <Ionicons name="time-outline" size={11} color="#64748b" />
-                            <Text className="text-slate-500 text-[10px]">{duration}</Text>
-                        </View>
-                        <View className="flex-row items-center gap-x-0.5">
-                            <Ionicons name="star" size={11} color="#f59e0b" />
-                            <Text className="text-slate-400 text-[10px] font-semibold">{rating}</Text>
-                        </View>
-                    </View>
-                </View>
-
-                {/* Price */}
-                <View className="items-end">
-                    <Text className="text-accent text-base font-extrabold">{price}</Text>
-                    <TouchableOpacity
-                        className="mt-2 bg-accent/15 px-3 py-1.5 rounded-lg border border-accent/20"
-                        activeOpacity={0.7}
-                    >
-                        <Text className="text-accent text-[10px] font-bold">Book Now</Text>
-                    </TouchableOpacity>
-                </View>
+          <Ionicons name={icon as any} size={20} color={iconColor} />
+        </View>
+        <View className="flex-1">
+          <Text className="text-white text-sm font-bold" numberOfLines={1}>
+            {name}
+          </Text>
+          {description && (
+            <Text className="text-slate-400 text-xs mt-0.5" numberOfLines={2}>
+              {description}
+            </Text>
+          )}
+          {artist && (
+            <View className="flex-row items-center gap-x-1 mt-1">
+              <Ionicons name="brush-outline" size={11} color="#64748b" />
+              <Text className="text-slate-400 text-xs">{artist}</Text>
             </View>
-        </TouchableOpacity>
-    );
+          )}
+        </View>
+      </View>
+
+      <View className="flex-row items-center gap-x-4 mb-3">
+        <View className="flex-row items-center gap-x-1.5">
+          <Ionicons name="time-outline" size={13} color="#64748b" />
+          <Text className="text-slate-400 text-xs">{duration}</Text>
+        </View>
+        {timesBooked !== undefined && (
+          <View className="flex-row items-center gap-x-1.5">
+            <Ionicons name="calendar-outline" size={13} color="#64748b" />
+            <Text className="text-slate-400 text-xs">{timesBooked} booked</Text>
+          </View>
+        )}
+      </View>
+
+      <View className="flex-row justify-between items-center">
+        <Text className="text-accent text-base font-extrabold">
+          {typeof price === "number" ? `₹${price.toLocaleString()}` : price}
+        </Text>
+        <View className="flex-row items-center gap-x-2">
+          <View className="flex-row items-center gap-x-0.5">
+            <Ionicons name="star" size={12} color="#f59e0b" />
+            <Text className="text-slate-400 text-xs font-semibold">
+              {rating}
+            </Text>
+          </View>
+          <TouchableOpacity className="flex-row items-center gap-x-1 ml-2">
+            <Text className="text-accent text-xs font-semibold">
+              View Details
+            </Text>
+            <Ionicons name="arrow-forward" size={12} color="#3b82f6" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 }

@@ -48,20 +48,7 @@ module Api
       private
 
       def admin_stats
-        {
-          total_users: User.count,
-          active_users: User.where(status: "active").count,
-          total_artists: ArtistProfile.count,
-          approved_artists: ArtistProfile.where(is_approved: true).count,
-          total_bookings: Booking.count,
-          pending_bookings: Booking.where(status: "pending").count,
-          confirmed_bookings: Booking.where(status: "confirmed").count,
-          completed_bookings: Booking.where(status: "completed").count,
-          total_services: Service.count,
-          total_reviews: Review.count,
-          total_revenue: Payment.sum(:amount),
-          total_organizations: (Organization.count rescue 0)
-        }
+        Dashboard::AdminStatsService.new(current_user).call
       end
 
       def artist_stats

@@ -1,83 +1,129 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { STATUS_COLORS } from "../../constants/mocks";
 
 interface BookingCardProps {
-    customerName: string;
-    serviceName: string;
-    artistName: string;
-    date: string;
-    time: string;
-    amount: string;
-    status: "Upcoming" | "Confirmed" | "Completed" | "Cancelled" | "Pending";
-    onPress?: () => void;
+  customerName: string;
+  serviceName: string;
+  artistName?: string;
+  avatarInitials?: string;
+  date?: string;
+  time?: string;
+  amount: string | number;
+  status: string;
+  variant?: "full" | "compact";
+  onPress?: () => void;
 }
 
-const STATUS_CONFIG: Record<string, { bg: string; text: string; dot: string; icon: string }> = {
-    upcoming: { bg: "bg-accent/10", text: "text-accent", dot: "bg-accent", icon: "time-outline" },
-    confirmed: { bg: "bg-success/10", text: "text-success", dot: "bg-success", icon: "checkmark-circle-outline" },
-    completed: { bg: "bg-info/10", text: "text-info", dot: "bg-info", icon: "checkmark-done-outline" },
-    cancelled: { bg: "bg-danger/10", text: "text-danger", dot: "bg-danger", icon: "close-circle-outline" },
-    pending: { bg: "bg-warn/10", text: "text-warn", dot: "bg-warn", icon: "hourglass-outline" },
-};
-
 export default function BookingCard({
-    customerName,
-    serviceName,
-    artistName,
-    date,
-    time,
-    amount,
-    status,
-    onPress,
+  customerName,
+  serviceName,
+  artistName,
+  avatarInitials,
+  date,
+  time,
+  amount,
+  status,
+  variant = "full",
+  onPress,
 }: BookingCardProps) {
-    const config = STATUS_CONFIG[status.toLowerCase()] || STATUS_CONFIG.pending;
+  const config = STATUS_COLORS[status.toLowerCase()] || STATUS_COLORS.pending;
 
+  if (variant === "compact") {
     return (
-        <TouchableOpacity
-            className="bg-dark-700 rounded-2xl p-4 mb-3 border border-white/5"
-            onPress={onPress}
-            activeOpacity={0.7}
-        >
-            {/* Header */}
-            <View className="flex-row items-start justify-between mb-3">
-                <View className="flex-1 mr-3">
-                    <Text className="text-white text-base font-bold" numberOfLines={1}>
-                        {serviceName}
-                    </Text>
-                    <View className="flex-row items-center gap-x-1 mt-1">
-                        <Ionicons name="brush-outline" size={12} color="#94a3b8" />
-                        <Text className="text-slate-400 text-xs">{artistName}</Text>
-                    </View>
-                </View>
-                <View className={`flex-row items-center gap-x-1.5 px-2.5 py-1 rounded-full ${config.bg}`}>
-                    <View className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
-                    <Text className={`text-[10px] font-semibold ${config.text}`}>{status}</Text>
-                </View>
+      <TouchableOpacity
+        className="bg-dark-700 rounded-2xl p-4 mb-3 border border-white/5"
+        onPress={onPress}
+        activeOpacity={0.7}
+      >
+        <View className="flex-row items-center">
+          <View className="w-10 h-10 rounded-full items-center justify-center mr-3 bg-dark-600">
+            <Text className="text-white text-xs font-bold">
+              {avatarInitials || customerName.charAt(0)}
+            </Text>
+          </View>
+          <View className="flex-1">
+            <Text className="text-white text-sm font-semibold">
+              {customerName}
+            </Text>
+            <Text className="text-slate-400 text-xs mt-0.5">{serviceName}</Text>
+          </View>
+          <View className="items-end">
+            <Text className="text-white text-sm font-extrabold">
+              ₹{Number(amount).toLocaleString()}
+            </Text>
+            <View className="flex-row items-center gap-x-1 mt-1">
+              <View
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: config.dot }}
+              />
+              <Text
+                className="text-xs font-semibold capitalize"
+                style={{ color: config.text }}
+              >
+                {status.toLowerCase()}
+              </Text>
             </View>
-
-            {/* Details */}
-            <View className="bg-dark-800 rounded-xl p-3 mb-3">
-                <View className="flex-row items-center gap-x-4">
-                    <View className="flex-row items-center gap-x-1.5 flex-1">
-                        <Ionicons name="calendar-outline" size={14} color="#64748b" />
-                        <Text className="text-slate-300 text-xs">{date}</Text>
-                    </View>
-                    <View className="flex-row items-center gap-x-1.5 flex-1">
-                        <Ionicons name="time-outline" size={14} color="#64748b" />
-                        <Text className="text-slate-300 text-xs">{time}</Text>
-                    </View>
-                </View>
-            </View>
-
-            {/* Footer */}
-            <View className="flex-row justify-between items-center">
-                <Text className="text-white text-lg font-extrabold">{amount}</Text>
-                <View className="flex-row items-center gap-x-1">
-                    <Text className="text-accent text-xs font-semibold">View Details</Text>
-                    <Ionicons name="chevron-forward" size={14} color="#3b82f6" />
-                </View>
-            </View>
-        </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableOpacity>
     );
+  }
+
+  return (
+    <TouchableOpacity
+      className="bg-dark-700 rounded-2xl p-4 mb-3 border border-white/5"
+      style={{ borderLeftWidth: 3, borderLeftColor: config.dot }}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      <View className="flex-row items-center mb-3">
+        <View className="w-10 h-10 rounded-full items-center justify-center mr-3 bg-dark-600">
+          <Text className="text-white text-xs font-bold">
+            {avatarInitials || customerName.charAt(0)}
+          </Text>
+        </View>
+        <View className="flex-1">
+          <Text className="text-white text-sm font-bold">{customerName}</Text>
+          <Text className="text-slate-400 text-xs mt-0.5">{serviceName}</Text>
+        </View>
+        <View
+          className="flex-row items-center gap-x-1.5 px-2.5 py-1 rounded-full"
+          style={{ backgroundColor: config.bg }}
+        >
+          <View
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ backgroundColor: config.dot }}
+          />
+          <Text
+            className="text-[10px] font-semibold uppercase"
+            style={{ color: config.text }}
+          >
+            {status.toLowerCase()}
+          </Text>
+        </View>
+      </View>
+
+      <View className="flex-row items-center gap-x-4 mb-3">
+        <View className="flex-row items-center gap-x-1.5">
+          <Ionicons name="calendar-outline" size={13} color="#64748b" />
+          <Text className="text-slate-300 text-xs">{date}</Text>
+        </View>
+        <View className="flex-row items-center gap-x-1.5">
+          <Ionicons name="time-outline" size={13} color="#64748b" />
+          <Text className="text-slate-300 text-xs">{time}</Text>
+        </View>
+      </View>
+
+      <View className="flex-row justify-between items-center pt-2 border-t border-white/5">
+        <Text className="text-slate-500 text-[10px]">
+          {artistName ? `Artist: ${artistName}` : ""}
+        </Text>
+        <Text className="text-accent text-base font-extrabold">
+          ₹{Number(amount).toLocaleString()}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
 }
