@@ -60,8 +60,6 @@ const MyServicesPage: React.FC = () => {
         );
     }, [serviceOfferings, searchQuery]);
 
-    const totalRevenuePotential = serviceOfferings.reduce((sum: number, s: ServiceOffering) => sum + (s.price || 0), 0);
-
     const openCreateModal = () => {
         setEditingService(null);
         setFormData({ name: '', description: '', price: '', duration_minutes: '' });

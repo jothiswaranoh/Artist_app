@@ -4,7 +4,7 @@ import { useBookings } from '../../hooks/useBookings';
 import type { ArtistProfile } from '../../services/ArtistProfileService';
 import {
     AlertCircle, Search, X, MapPin, Calendar, Clock,
-    DollarSign, Brush, Star, CalendarPlus, CheckCircle
+    Brush, Star, CalendarPlus, CheckCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../../components/common/Toast';

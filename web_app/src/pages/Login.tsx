@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Palette, Mail, Lock, AlertCircle, ArrowRight, User as UserIcon, Eye, EyeOff } from 'lucide-react';
 import { AuthService } from '../services/AuthService';
 import Button from '../components/Button';
@@ -13,7 +13,6 @@ const Login: React.FC = () => {
     const [role, setRole] = useState<'artist' | 'customer'>('artist');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();

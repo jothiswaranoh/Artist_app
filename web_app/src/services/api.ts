@@ -70,13 +70,13 @@ apiClient.interceptors.request.use(
 // --------------------
 apiClient.interceptors.response.use(
     (response: AxiosResponse) => {
-        if (process.env.NODE_ENV !== 'production') {
+        if (import.meta.env.DEV) {
             console.info(`✅ ${response.config.method?.toUpperCase()} ${response.config.url}`, response.status);
         }
         return response;
     },
     async (error: AxiosError) => {
-        if (process.env.NODE_ENV !== 'production') {
+        if (import.meta.env.DEV) {
             console.error(
                 `❌ ${error.config?.method?.toUpperCase()} ${error.config?.url}`,
                 error.response?.status,
@@ -170,4 +170,4 @@ export const apiService = {
     delete: <T = any>(url: string) => service<T>({ url, method: 'delete' }),
 };
 
-export default service;
+export default apiService;

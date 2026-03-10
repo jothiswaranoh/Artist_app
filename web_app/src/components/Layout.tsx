@@ -3,15 +3,13 @@ import { useNavigate, NavLink, Outlet } from 'react-router-dom';
 import {
     Palette,
     LayoutDashboard,
-    Users,
     Settings,
     Calendar,
     LogOut,
     Star,
     Layers,
     Shield,
-    Brush,
-    User
+    Brush
 } from 'lucide-react';
 import { AuthService } from '../services/AuthService';
 import './Layout.css';

@@ -8,6 +8,7 @@ export interface ArtistProfile {
     base_price: number;
     city: string;
     experience_years: number;
+    is_approved?: boolean;
     created_at: string;
     updated_at: string;
     user?: {
