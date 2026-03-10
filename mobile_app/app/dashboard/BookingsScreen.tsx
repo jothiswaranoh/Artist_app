@@ -182,6 +182,7 @@ export default function BookingsScreen() {
             icon={stat.icon}
             accentColor={stat.color}
             borderColor={stat.color}
+            className="flex-1"
           />
         ))}
       </View>

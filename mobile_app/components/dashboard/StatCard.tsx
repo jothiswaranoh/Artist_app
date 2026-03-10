@@ -10,6 +10,7 @@ interface StatCardProps {
   trendPositive?: boolean;
   accentColor?: string;
   borderColor?: string;
+  className?: string;
 }
 
 export default function StatCard({
@@ -20,6 +21,7 @@ export default function StatCard({
   trendPositive,
   accentColor,
   borderColor,
+  className = "",
 }: StatCardProps) {
   const renderIcon = () => {
     if (typeof icon === "string") {
@@ -36,7 +38,7 @@ export default function StatCard({
 
   return (
     <View
-      className="bg-dark-700 rounded-2xl p-4 mb-3 border border-white/5 w-[48%]"
+      className={`bg-dark-700 rounded-2xl p-4 mb-3 border border-white/5 ${className}`}
       style={{
         borderLeftWidth: borderColor ? 4 : 0,
         borderLeftColor: borderColor,
