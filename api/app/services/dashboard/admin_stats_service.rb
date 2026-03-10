@@ -19,7 +19,7 @@ module Dashboard
         total_services: Service.count,
         total_reviews: Review.count,
         total_revenue: Payment.sum(:amount).to_f,
-        total_organizations: (Organization.count rescue 0)
+        total_organizations: (ActiveRecord::Base.connection.table_exists?('organizations') ? Organization.count : 0)
       }
     end
   end
