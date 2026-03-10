@@ -190,6 +190,7 @@ export default function HomeScreen() {
               icon={stat.icon}
               accentColor={stat.color}
               borderColor={stat.color}
+              className="w-[48%]"
             />
           ))}
         </View>

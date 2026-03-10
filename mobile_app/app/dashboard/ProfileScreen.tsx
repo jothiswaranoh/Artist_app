@@ -37,7 +37,7 @@ export default function ProfileScreen() {
   const stats = apiData?.stats;
 
   // Merge: prioritize API values, otherwise fall back to mock
-  const totalBookings = stats?.total_bookings ?? ARTIST.totalBookings;
+  const totalBookings = stats?.total_bookings ?? ARTIST.bookings;
   const rating = stats?.average_rating ?? ARTIST.rating;
   const completedBookings = stats?.completed_bookings ?? 116;
 
@@ -47,14 +47,25 @@ export default function ProfileScreen() {
       value: totalBookings,
       icon: "calendar" as const,
       color: "#3b82f6",
+      trend: "+12% this month",
+      trendPositive: true,
     },
     {
       label: "Done",
       value: completedBookings,
       icon: "checkmark-done" as const,
       color: "#22c55e",
+      trend: "+8% growth",
+      trendPositive: true,
     },
-    { label: "Rating", value: rating, icon: "star" as const, color: "#f59e0b" },
+    {
+      label: "Rating",
+      value: rating,
+      icon: "star" as const,
+      color: "#f59e0b",
+      trend: "Top 5% Artist",
+      trendPositive: true,
+    },
   ];
 
   return (
@@ -83,7 +94,7 @@ export default function ProfileScreen() {
         <View className="flex-row items-center gap-x-2 mt-1">
           <Ionicons name="brush-outline" size={14} color="#64748b" />
           <Text className="text-slate-400 text-sm font-medium">
-            {ARTIST.category}
+            {ARTIST.title}
           </Text>
         </View>
 
@@ -93,20 +104,44 @@ export default function ProfileScreen() {
             Verified Artist
           </Text>
         </View>
+
+        <View className="px-10 mt-5">
+          <Text className="text-slate-400 text-xs text-center leading-5 italic">
+            "{ARTIST.bio}"
+          </Text>
+        </View>
+
+        <View className="flex-row items-center gap-x-1 mt-4">
+          <Ionicons name="location-sharp" size={12} color="#64748b" />
+          <Text className="text-slate-500 text-[10px] font-medium">
+            {ARTIST.location}
+          </Text>
+        </View>
       </View>
 
       {/* Stats Bar */}
-      <View className="flex-row justify-between px-5 -mt-6 gap-x-3">
-        {profileStats.map((stat) => (
-          <StatCard
-            key={stat.label}
-            title={stat.label}
-            value={stat.value}
-            icon={stat.icon}
-            accentColor={stat.color}
-            borderColor={stat.color}
-          />
-        ))}
+      <View className="-mt-6">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 4 }}
+        >
+          <View className="flex-row gap-x-3">
+            {profileStats.map((stat) => (
+              <StatCard
+                key={stat.label}
+                title={stat.label}
+                value={stat.value}
+                icon={stat.icon}
+                accentColor={stat.color}
+                borderColor={stat.color}
+                trend={stat.trend}
+                trendPositive={stat.trendPositive}
+                className="w-44"
+              />
+            ))}
+          </View>
+        </ScrollView>
       </View>
 
       {/* Account Section */}
@@ -140,6 +175,19 @@ export default function ProfileScreen() {
               </Text>
               <Text className="text-slate-500 text-[10px]">
                 Manage your work gallery
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#334155" />
+          </TouchableOpacity>
+
+          <TouchableOpacity className="flex-row items-center p-4 gap-x-3">
+            <View className="w-9 h-9 rounded-xl bg-slate-500/10 items-center justify-center">
+              <Ionicons name="settings-sharp" size={18} color="#94a3b8" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-white text-sm font-semibold">Settings</Text>
+              <Text className="text-slate-500 text-[10px]">
+                App preferences & security
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={16} color="#334155" />
