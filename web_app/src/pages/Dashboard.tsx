@@ -8,8 +8,7 @@ import {
     ChevronRight,
     Star,
     Layers,
-    DollarSign,
-    MessageSquare
+    DollarSign
 } from 'lucide-react';
 import { useResource } from '../hooks/useResource';
 import { AuthService } from '../services/AuthService';

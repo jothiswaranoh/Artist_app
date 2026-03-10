@@ -10,7 +10,6 @@ import {
     Layers,
     Brush,
     ChevronLeft,
-    Moon,
     Sun,
     Shield
 } from 'lucide-react';

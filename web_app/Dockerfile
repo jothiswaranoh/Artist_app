@@ -1,17 +1,23 @@
-FROM node:22-alpine
-
+# Stage 1: Base - Shared environment
+FROM node:22-alpine AS base
 WORKDIR /app
-
-# Install dependencies first for better caching
 COPY package*.json ./
 RUN npm install
-
-# Copy the rest of the application
 COPY . .
 
-# Expose Vite's default port
+# Stage 2: Development - Hot reloading
+FROM base AS development
 EXPOSE 5173
+CMD ["npm", "run", "dev", "--", "--host"]
 
-# Start the development server
-# --host 0.0.0.0 is required for Docker to expose the port
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Stage 3: Builder - Build the production assets
+FROM base AS builder
+ARG VITE_API_URL=/api
+ENV VITE_API_URL=$VITE_API_URL
+RUN npm run build
+
+# Stage 4: Production - Server with Nginx
+FROM nginx:alpine AS production
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
