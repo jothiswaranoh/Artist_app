@@ -28,6 +28,7 @@ services:
     container_name: artist_app_api_prod
     environment:
       RAILS_ENV: production
+      RAILS_LOG_LEVEL: warn
       DATABASE_HOST: db
       DATABASE_USERNAME: ${POSTGRES_USER:-postgres}
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
@@ -39,8 +40,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "3001:3000"
+#    ports:
+#      - "3001:3000"
     networks:
       - artist_app_network
     restart: unless-stopped
@@ -56,13 +57,13 @@ services:
       context: ./web_app
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: http://localhost:3001
+        VITE_API_URL: /api
     container_name: artist_app_web_prod
     depends_on:
       api:
         condition: service_healthy
     ports:
-      - "8080:80"
+      - "80:80"
     networks:
       - artist_app_network
     restart: unless-stopped
