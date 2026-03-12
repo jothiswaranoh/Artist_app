@@ -1,8 +1,26 @@
 import { apiRequest } from "./api";
 
+export interface Artist {
+  id: string;
+  name: string;
+  email: string;
+  city: string | null;
+  bio: string | null;
+  experience_years: number;
+  base_price: number;
+  bookings: number;
+  reviews: number;
+  services: number;
+  is_approved: boolean;
+}
+
 export const getArtists = async () => {
   const data = await apiRequest("/artists");
 
+  if (!data?.data?.artist_profiles) {
+    throw new Error("Invalid API response: artist_profiles missing");
+  }
+  
   return data.data.artist_profiles.map((artist: any) => ({
     id: artist.id,
     name: artist.name || artist.email,

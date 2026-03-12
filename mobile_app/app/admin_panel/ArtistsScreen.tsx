@@ -9,21 +9,20 @@ import SearchFilterBar from "../../components/admin/SearchFilterBar";
 import KPICard from "../../components/admin/KPICard";
 
 import { toast } from "../../utils/toast";
-import { getArtists } from "../../services/artists";
+import { getArtists, Artist } from "../../services/artists";
 
 const STATUS_FILTERS = ["All", "Approved", "Pending"];
 
 export default function ArtistsScreen() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [artists, setArtists] = useState<any[]>([]);
+  const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchArtists = async () => {
       try {
         const data = await getArtists();
-        console.log("ARTISTS:", data);
         setArtists(data);
       } catch (error) {
         toast.error("Failed to load artists");
@@ -69,12 +68,10 @@ export default function ArtistsScreen() {
     );
   }
 
-  const renderArtist = ({ item: artist }: { item: any }) => (
+  const renderArtist = ({ item: artist }: { item: Artist }) => (
     <View className="bg-dark-700 rounded-2xl p-4 mb-3 border border-white/5">
 
-      {/* Top row */}
       <View className="flex-row items-start gap-x-3 mb-4">
-
         <Avatar name={artist.name || artist.email} size={44} />
 
         <View className="flex-1">
@@ -83,20 +80,20 @@ export default function ArtistsScreen() {
           </Text>
 
           <Text className="text-slate-400 text-xs mt-0.5">
-            {artist.bio}
+            {artist.bio || "No bio available"}
           </Text>
 
           <View className="flex-row items-center gap-x-1 mt-1.5">
             <Ionicons name="location-outline" size={12} color="#64748b" />
             <Text className="text-slate-500 text-[10px]">
-              {artist.city}
+              {artist.city || "Unknown"}
             </Text>
 
             <Text className="text-slate-500 text-[10px]"> · </Text>
 
             <Ionicons name="time-outline" size={12} color="#64748b" />
             <Text className="text-slate-500 text-[10px]">
-              {artist.experience_years} yrs
+              {artist.experience_years ?? 0} yrs
             </Text>
           </View>
         </View>
@@ -104,27 +101,22 @@ export default function ArtistsScreen() {
         <StatusBadge status={artist.is_approved ? "Active" : "Pending"} />
       </View>
 
-      {/* Stats row */}
       <View className="flex-row bg-dark-800 rounded-xl p-3 mb-3">
 
         <View className="flex-1 items-center">
           <Text className="text-white text-base font-bold">
-            {artist.bookings}
+            {artist.bookings ?? 0}
           </Text>
-          <Text className="text-slate-500 text-[10px] mt-0.5">
-            Bookings
-          </Text>
+          <Text className="text-slate-500 text-[10px] mt-0.5">Bookings</Text>
         </View>
 
         <View className="w-px bg-white/5 my-1" />
 
         <View className="flex-1 items-center">
           <Text className="text-white text-base font-bold">
-            ★ {artist.reviews}
+            ★ {artist.reviews ?? 0}
           </Text>
-          <Text className="text-slate-500 text-[10px] mt-0.5">
-            Reviews
-          </Text>
+          <Text className="text-slate-500 text-[10px] mt-0.5">Reviews</Text>
         </View>
 
         <View className="w-px bg-white/5 my-1" />
@@ -133,14 +125,11 @@ export default function ArtistsScreen() {
           <Text className="text-white text-base font-bold">
             ₹{artist.base_price}
           </Text>
-          <Text className="text-slate-500 text-[10px] mt-0.5">
-            Base Price
-          </Text>
+          <Text className="text-slate-500 text-[10px] mt-0.5">Base Price</Text>
         </View>
 
       </View>
 
-      {/* Footer */}
       <View className="flex-row justify-between items-center border-t border-white/5 pt-3">
 
         <Text className="text-slate-500 text-[10px] flex-1">
@@ -194,17 +183,16 @@ export default function ArtistsScreen() {
       renderItem={renderArtist}
       initialNumToRender={6}
       windowSize={10}
+      removeClippedSubviews
 
       ListHeaderComponent={
         <>
-          {/* Breadcrumb */}
           <View className="flex-row items-center gap-x-2 mb-4">
             <Text className="text-slate-500 text-xs">Admin</Text>
             <Ionicons name="chevron-forward" size={14} color="#64748b" />
             <Text className="text-slate-400 text-xs font-medium">Artists</Text>
           </View>
 
-          {/* Header */}
           <SectionHeader
             title="Artist Management"
             subtitle="Manage makeup artists on the platform"
@@ -212,39 +200,18 @@ export default function ArtistsScreen() {
             onAction={() => toast.success("Opening Add Artist form...")}
           />
 
-          {/* KPI cards */}
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             className="mb-6 -mx-5"
             contentContainerStyle={{ paddingHorizontal: 20 }}
           >
-            <KPICard
-              title="Total Artists"
-              value={artists.length}
-              icon={<Ionicons name="brush" size={18} color="#a855f7" />}
-            />
-
-            <KPICard
-              title="Approved"
-              value={artists.filter((a) => a.is_approved).length}
-              icon={<Ionicons name="checkmark-circle" size={18} color="#22c55e" />}
-            />
-
-            <KPICard
-              title="Pending"
-              value={artists.filter((a) => !a.is_approved).length}
-              icon={<Ionicons name="hourglass" size={18} color="#f59e0b" />}
-            />
-
-            <KPICard
-              title="Avg Reviews"
-              value={avgRating}
-              icon={<Ionicons name="star" size={18} color="#ef4444" />}
-            />
+            <KPICard title="Total Artists" value={artists.length} icon={<Ionicons name="brush" size={18} color="#a855f7" />} />
+            <KPICard title="Approved" value={artists.filter((a) => a.is_approved).length} icon={<Ionicons name="checkmark-circle" size={18} color="#22c55e" />} />
+            <KPICard title="Pending" value={artists.filter((a) => !a.is_approved).length} icon={<Ionicons name="hourglass" size={18} color="#f59e0b" />} />
+            <KPICard title="Avg Reviews" value={avgRating} icon={<Ionicons name="star" size={18} color="#ef4444" />} />
           </ScrollView>
 
-          {/* Search bar */}
           <SearchFilterBar
             searchValue={search}
             onSearchChange={setSearch}
