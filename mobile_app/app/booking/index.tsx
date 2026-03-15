@@ -5,8 +5,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from "react-native";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, router } from "expo-router";
+import { createBooking } from "../../services/bookings";
 
 export default function BookingScreen() {
   const params = useLocalSearchParams();
@@ -35,6 +37,7 @@ export default function BookingScreen() {
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const dates = useMemo(() => {
     const result = [];
@@ -96,15 +99,63 @@ export default function BookingScreen() {
     });
   };
 
-  const handleBooking = () => {
-    if (!selectedDate || !selectedTime) return;
+  const calculateEndTime = (startTime: string, durationInMinutes: number) => {
+    const [hours, minutes] = startTime.split(":").map(Number);
 
-    Alert.alert(
-      "Booking details selected",
-      `Service: ${serviceName || "Selected service"}\nDate: ${formatDateLabel(
-        selectedDate
-      )}\nTime: ${selectedTime}\n\nAPI integration pending.`
-    );
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes + durationInMinutes);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    const endHours = String(date.getHours()).padStart(2, "0");
+    const endMinutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${endHours}:${endMinutes}`;
+  };
+
+  const handleBooking = async () => {
+    if (!selectedDate || !selectedTime || !serviceId || !artistId) {
+      Alert.alert("Missing details", "Please select date and time.");
+      return;
+    }
+
+    const parsedPrice = Number(price || 0);
+    const parsedDuration = Number(duration || 60);
+    const endTime = calculateEndTime(selectedTime, parsedDuration);
+
+    try {
+      setSubmitting(true);
+
+      await createBooking({
+        artistProfileId: artistId as string,
+        serviceId: serviceId as string,
+        bookingDate: selectedDate,
+        startTime: selectedTime,
+        endTime,
+        totalAmount: parsedPrice,
+        status: "pending",
+      });
+
+      router.replace({
+        pathname: "/booking/success",
+        params: {
+          serviceName: serviceName || "Your service",
+          artistName: artistName || "Selected artist",
+          selectedDate,
+          selectedTime,
+          price: String(parsedPrice),
+        },
+      });
+    } catch (error: any) {
+      console.error("Booking failed", error);
+      Alert.alert(
+        "Booking failed",
+        error?.message || "Something went wrong. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -121,7 +172,6 @@ export default function BookingScreen() {
         contentContainerStyle={{ paddingBottom: 120 }}
         showsVerticalScrollIndicator={false}
       >
-       
         <View className="bg-dark-700 rounded-2xl p-5 mb-8 border border-white/5">
           <Text className="text-white text-lg font-semibold mb-4">
             Booking Summary
@@ -142,19 +192,14 @@ export default function BookingScreen() {
               </Text>
             </View>
 
-            <View className="flex-row items-start justify-between">
-              <Text className="text-slate-400 text-sm">Duration</Text>
-              <Text className="text-white text-sm font-medium">
-                {duration ? (
-                  <View className="flex-row items-start justify-between">
-                    <Text className="text-slate-400 text-sm">Duration</Text>
-                    <Text className="text-white text-sm font-medium">
-                      {duration} mins
-                    </Text>
-                  </View>
-                ) : null}
-              </Text>
-            </View>
+            {duration ? (
+              <View className="flex-row items-start justify-between">
+                <Text className="text-slate-400 text-sm">Duration</Text>
+                <Text className="text-white text-sm font-medium">
+                  {duration} mins
+                </Text>
+              </View>
+            ) : null}
 
             <View className="flex-row items-start justify-between">
               <Text className="text-slate-400 text-sm">Artist</Text>
@@ -178,7 +223,6 @@ export default function BookingScreen() {
                 {selectedTime || "Not selected"}
               </Text>
             </View>
-
           </View>
         </View>
 
@@ -227,7 +271,7 @@ export default function BookingScreen() {
             return (
               <TouchableOpacity
                 key={time}
-                disabled={disabled}
+                disabled={disabled || submitting}
                 onPress={() => setSelectedTime(time)}
                 className={`min-w-[88px] px-5 py-3 rounded-2xl items-center border ${
                   disabled
@@ -252,15 +296,21 @@ export default function BookingScreen() {
 
       <View className="p-6 border-t border-white/5 bg-dark-900">
         <TouchableOpacity
-          disabled={!selectedDate || !selectedTime}
+          disabled={!selectedDate || !selectedTime || submitting}
           onPress={handleBooking}
           className={`rounded-2xl p-4 items-center ${
-            selectedDate && selectedTime ? "bg-purple-600" : "bg-slate-700"
+            selectedDate && selectedTime && !submitting
+              ? "bg-purple-600"
+              : "bg-slate-700"
           }`}
         >
-          <Text className="text-white font-semibold text-base">
-            Confirm Booking
-          </Text>
+          {submitting ? (
+            <ActivityIndicator color="#ffffff" />
+          ) : (
+            <Text className="text-white font-semibold text-base">
+              Confirm Booking
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>

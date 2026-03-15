@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { router } from "expo-router";
 import {
   View,
   Text,
@@ -7,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import {Stack, useLocalSearchParams } from "expo-router";
+import {router, Stack, useLocalSearchParams } from "expo-router";
 
 import { getArtistById } from "../../services/artists";
 
@@ -130,7 +129,7 @@ export default function ArtistDetail() {
                 serviceName: selectedService.name,
                 price: selectedService.price?.toString(),
                 duration: selectedService.duration?.toString(),
-                artistName: artist.email,
+                artistName:artist.name || artist.email,
               },
             })
           }
