@@ -5,11 +5,16 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # Authentication
-      post "login", to: "sessions#create"
-      post "signup", to: "registrations#create"
+      post "login",            to: "sessions#create"
+      post "signup",           to: "registrations#create"
       patch "password/update", to: "passwords#update"
-      delete "logout", to: "sessions#destroy"
-      get "me", to: "sessions#me"
+      delete "logout",         to: "sessions#destroy"
+      get "me",                to: "sessions#me"
+
+      # Token management (refresh / rotation)
+      namespace :auth do
+        post "refresh", to: "tokens#refresh"
+      end
 
       # Dashboard
       get "dashboard", to: "dashboard#index"

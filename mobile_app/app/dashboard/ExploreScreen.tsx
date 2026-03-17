@@ -32,7 +32,7 @@ export default function ExploreScreen() {
     >
       <StatusBar barStyle="light-content" backgroundColor="#0b1120" />
 
-      {/* Header */}
+
       <View className="px-5 pt-14 pb-2">
         <View className="flex-row justify-between items-start">
           <View>
@@ -50,7 +50,7 @@ export default function ExploreScreen() {
         </View>
       </View>
 
-      {/* Search */}
+
       <View className="px-5 mt-4">
         <SearchBar
           value={search}
@@ -59,7 +59,7 @@ export default function ExploreScreen() {
         />
       </View>
 
-      {/* Service Cards */}
+
       <View className="px-5 mt-6">
         {filteredServices.length === 0 ? (
           <View className="items-center justify-center py-16 gap-y-3">
@@ -83,7 +83,7 @@ export default function ExploreScreen() {
         )}
       </View>
 
-      {/* Bottom spacer */}
+
       <View className="h-24" />
     </ScrollView>
   );

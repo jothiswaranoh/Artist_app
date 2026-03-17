@@ -8,8 +8,6 @@ import { Platform } from "react-native";
 import Constants from "expo-constants";
 import storage from "./storage";
 
-// For physical devices, we need to use the machine's IP address.
-// expo-constants helps us get the host IP during development.
 const getBaseUrl = () => {
   if (Platform.OS === "web") {
     return "http://localhost:3000/api/v1";
@@ -24,9 +22,8 @@ const getBaseUrl = () => {
 };
 
 export const API_BASE_URL = getBaseUrl();
-console.log("[API] Base URL:", API_BASE_URL);
 
-// API Response Types
+
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
@@ -43,7 +40,6 @@ const apiClient = axios.create({
   },
 });
 
-// Request interceptor
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const token = await storage.getToken();
@@ -62,7 +58,6 @@ apiClient.interceptors.request.use(
   },
 );
 
-// Response interceptor
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;

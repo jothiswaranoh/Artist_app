@@ -1,7 +1,8 @@
 class User < ApplicationRecord
   has_secure_password
   
-  has_one :artist_profile, dependent: :destroy
+  has_one  :artist_profile,  dependent: :destroy
+  has_many :refresh_tokens,  dependent: :delete_all
   accepts_nested_attributes_for :artist_profile, update_only: true
   has_many :bookings, foreign_key: :customer_id, dependent: :destroy
   has_many :reviews, foreign_key: :customer_id, dependent: :destroy

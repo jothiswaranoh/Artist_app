@@ -10,7 +10,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useResource } from "../../hooks/useResource";
 
-// ── Types ──
+
 interface ApiBooking {
   id: string;
   customer_name: string;
@@ -66,7 +66,6 @@ function formatTime(timeStr: string) {
 export default function BookingsScreen() {
   const [statusFilter, setStatusFilter] = useState("All");
 
-  // Fetch artist bookings from API
   const {
     data: bookingsResp,
     loading: bookingsLoading,
@@ -74,14 +73,12 @@ export default function BookingsScreen() {
     reload,
   } = useResource<{ data: ApiBooking[] }>("/bookings/artist_bookings");
 
-  // Fetch dashboard stats from API (for summary cards)
   const { data: dashboardResp, loading: statsLoading } = useResource<{
     stats: DashboardStats;
   }>("/dashboard/artist");
 
   const stats = dashboardResp?.stats;
 
-  // Normalise API bookings → display shape; fall back to mock if API is empty
   const bookings = useMemo(() => {
     const raw = bookingsResp?.data;
     if (raw && raw.length > 0) {
@@ -102,7 +99,7 @@ export default function BookingsScreen() {
             .join("") || "?",
       }));
     }
-    return MOCK_BOOKINGS; // Show mock while loading or if DB is empty
+    return MOCK_BOOKINGS;
   }, [bookingsResp]);
 
   const summaryStats = [
@@ -143,7 +140,7 @@ export default function BookingsScreen() {
     >
       <StatusBar barStyle="light-content" backgroundColor="#0b1120" />
 
-      {/* Header */}
+
       <View className="px-5 pt-14 pb-2">
         <View className="flex-row justify-between items-start">
           <View>
@@ -153,7 +150,7 @@ export default function BookingsScreen() {
             </Text>
           </View>
           <View className="flex-row items-center gap-x-2">
-            {/* Live sync indicator */}
+
             {bookingsLoading && (
               <ActivityIndicator size="small" color="#4a7cf5" />
             )}
@@ -172,7 +169,7 @@ export default function BookingsScreen() {
         </View>
       </View>
 
-      {/* Summary Stats */}
+
       <View className="flex-row mx-5 mt-4 mb-4 gap-x-3">
         {summaryStats.map((stat) => (
           <StatCard
@@ -187,7 +184,7 @@ export default function BookingsScreen() {
         ))}
       </View>
 
-      {/* Filter Chips */}
+
       <View className="mb-4 px-5">
         <FilterChips
           options={STATUS_FILTERS}
@@ -196,7 +193,7 @@ export default function BookingsScreen() {
         />
       </View>
 
-      {/* Section Title */}
+
       <View className="px-5 flex-row justify-between items-center mb-3">
         <Text className="text-white text-base font-bold">
           {statusFilter === "All" ? "All Bookings" : `${statusFilter} Bookings`}
@@ -206,7 +203,7 @@ export default function BookingsScreen() {
         </Text>
       </View>
 
-      {/* Booking Cards */}
+
       <View className="px-5">
         {filtered.length === 0 ? (
           <View className="items-center justify-center py-16 gap-y-3">
@@ -233,7 +230,7 @@ export default function BookingsScreen() {
         )}
       </View>
 
-      {/* Bottom spacer */}
+
       <View className="h-24" />
     </ScrollView>
   );

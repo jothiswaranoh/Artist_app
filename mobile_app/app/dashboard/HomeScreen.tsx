@@ -10,7 +10,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useResource } from "../../hooks/useResource";
 
-// ── Types ──
+
 interface DashboardStats {
   total_bookings: number;
   pending_bookings: number;
@@ -56,7 +56,7 @@ export default function HomeScreen() {
 
   const stats = apiData?.stats;
 
-  // Merge: use API values when available, otherwise fall back to mock
+
   const totalBookings = stats?.total_bookings ?? MOCK_STATS.total_bookings;
   const pendingBookings =
     stats?.pending_bookings ?? MOCK_STATS.pending_bookings;
@@ -110,7 +110,7 @@ export default function HomeScreen() {
     >
       <StatusBar barStyle="light-content" backgroundColor="#0b1120" />
 
-      {/* ── Header ── */}
+
       <View className="px-5 pt-14 pb-4">
         <View className="flex-row justify-between items-center">
           <View>
@@ -120,7 +120,7 @@ export default function HomeScreen() {
             </Text>
           </View>
           <View className="flex-row items-center gap-x-3">
-            {/* Live / syncing indicator */}
+
             {loading && <ActivityIndicator size="small" color="#4a7cf5" />}
             {error && !loading && (
               <TouchableOpacity onPress={reload}>
@@ -144,7 +144,7 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      {/* ── Welcome Banner ── */}
+
       <View
         className="mx-5 mb-6 rounded-2xl overflow-hidden"
         style={{ backgroundColor: "#4a7cf5" }}
@@ -178,7 +178,7 @@ export default function HomeScreen() {
         <View style={{ height: 6, backgroundColor: "rgba(0,0,0,0.1)" }} />
       </View>
 
-      {/* ── Overview ── */}
+
       <View className="px-5 mb-6">
         <Text className="text-white text-base font-bold mb-3">Overview</Text>
         <View className="flex-row flex-wrap justify-between">
@@ -196,7 +196,7 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      {/* ── Recent Bookings ── */}
+
       <View className="px-5 mb-6">
         <View className="flex-row justify-between items-center mb-4">
           <Text className="text-white text-base font-bold">
@@ -220,7 +220,7 @@ export default function HomeScreen() {
         ))}
       </View>
 
-      {/* Bottom spacer for tab bar */}
+
       <View className="h-24" />
     </ScrollView>
   );

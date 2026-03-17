@@ -36,7 +36,6 @@ export default function ProfileScreen() {
   );
   const stats = apiData?.stats;
 
-  // Merge: prioritize API values, otherwise fall back to mock
   const totalBookings = stats?.total_bookings ?? ARTIST.bookings;
   const rating = stats?.average_rating ?? ARTIST.rating;
   const completedBookings = stats?.completed_bookings ?? 116;
@@ -75,7 +74,7 @@ export default function ProfileScreen() {
     >
       <StatusBar barStyle="light-content" backgroundColor="#0b1120" />
 
-      {/* Profile Header */}
+
       <View className="pt-14 pb-8 items-center bg-dark-800 rounded-b-[40px] border-b border-white/5">
         <View className="relative">
           <View className="w-24 h-24 rounded-[32px] bg-accent items-center justify-center border-4 border-dark-900 overflow-hidden">
@@ -119,7 +118,7 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Stats Bar */}
+
       <View className="-mt-6">
         <ScrollView
           horizontal
@@ -144,7 +143,7 @@ export default function ProfileScreen() {
         </ScrollView>
       </View>
 
-      {/* Account Section */}
+
       <View className="mx-5 mt-8">
         <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-2 ml-1">
           Account
@@ -195,7 +194,7 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Business Section */}
+
       <View className="mx-5 mt-5">
         <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-2 ml-1">
           Business
@@ -216,7 +215,7 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Logout */}
+
       <View className="mx-5 mt-5">
         <View className="bg-dark-700 rounded-2xl overflow-hidden border border-white/5">
           <TouchableOpacity

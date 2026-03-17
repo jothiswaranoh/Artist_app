@@ -41,7 +41,6 @@ export default function LoginScreen({
         await storage.setToken(response.data.token);
         await storage.setUser(response.data);
 
-        // Call the success callback to update root state
         onLoginSuccess();
       } else {
         Alert.alert("Login Failed", response.message || "Invalid credentials");
