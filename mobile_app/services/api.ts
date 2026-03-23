@@ -1,10 +1,18 @@
 import { getToken } from "./auth";
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL!;
+const rawBaseUrl = process.env.EXPO_PUBLIC_API_URL;
 
-if (!BASE_URL) {
+if (!rawBaseUrl) {
   throw new Error("EXPO_PUBLIC_API_URL is not defined");
 }
+
+const normalizedBaseUrl = rawBaseUrl.replace(/\/$/, "");
+
+const BASE_URL = normalizedBaseUrl.endsWith("/api/v1")
+  ? normalizedBaseUrl
+  : normalizedBaseUrl.endsWith("/api")
+    ? `${normalizedBaseUrl}/v1`
+    : `${normalizedBaseUrl}/api/v1`;
 
 const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
@@ -27,6 +35,7 @@ export const apiRequest = async (
 
   if (!response.ok) {
     const text = await response.text();
+    console.log("API error response:", text);
     throw new Error(`API request failed: ${response.status}`);
   }
 
