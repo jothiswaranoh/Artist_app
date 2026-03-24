@@ -66,9 +66,22 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_URL=http://localhost:3000
+      - VITE_API_URL=http://localhost
     depends_on:
       - api
+    networks:
+      - artist_app_network
+    
+  nginx:
+    image: nginx:latest
+    container_name: artist_app_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api
+      - web
     networks:
       - artist_app_network
 
