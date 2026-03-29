@@ -11,14 +11,18 @@ module Authentication
     return if @current_user
 
     header = request.headers['Authorization']
-    header = header.split(' ').last if header
+    token = header&.split(' ')&.last
+    return render_error(message: 'Missing token', status: :unauthorized) unless token
+
     begin
-      @decoded = ::JsonWebToken.decode(header)
+      @decoded = ::JsonWebToken.decode(token)
       @current_user = User.find(@decoded[:user_id])
     rescue ActiveRecord::RecordNotFound => e
       render_error(message: 'User not found', status: :unauthorized, errors: [e.message])
     rescue ::JWT::DecodeError => e
       render_error(message: 'Invalid token', status: :unauthorized, errors: [e.message])
+    rescue ::JWT::ExpiredSignature => e
+      render_error(message: 'Token expired', status: :unauthorized, errors: [e.message])
     end
   end
 

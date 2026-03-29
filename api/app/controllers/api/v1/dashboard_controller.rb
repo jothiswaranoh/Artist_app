@@ -17,9 +17,7 @@ module Api
 
       # GET /api/v1/dashboard/admin
       def admin
-        unless current_user.admin?
-          return render_error(message: "Forbidden", status: :forbidden)
-        end
+        return render_error(message: "Forbidden", status: :forbidden) unless current_user.admin?
 
         render_success(
           data: { stats: admin_stats },
@@ -29,9 +27,7 @@ module Api
 
       # GET /api/v1/dashboard/artist
       def artist
-        unless current_user.artist?
-          return render_error(message: "Forbidden", status: :forbidden)
-        end
+        return render_error(message: "Forbidden", status: :forbidden) unless current_user.artist?
 
         render_success(
           data: { stats: artist_stats },

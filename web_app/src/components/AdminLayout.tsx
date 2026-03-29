@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard,
     Users,
@@ -18,7 +18,15 @@ import './AdminLayout.css';
 
 const AdminLayout: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const user = AuthService.getCurrentUser();
+
+    const getBreadcrumb = () => {
+        const path = location.pathname.split('/').filter(Boolean);
+        if (path.length === 0) return 'Admin / Dashboard';
+        const label = path[path.length - 1].replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
+        return `Admin / ${label}`;
+    };
 
     const handleLogout = () => {
         AuthService.logout();
@@ -81,7 +89,7 @@ const AdminLayout: React.FC = () => {
             <main className="admin-main">
                 <header className="admin-topbar">
                     <div className="topbar-left">
-                        <span className="breadcrumb">Admin / Users</span>
+                        <span className="breadcrumb">{getBreadcrumb()}</span>
                     </div>
                     <div className="topbar-right">
                         <button className="theme-toggle">

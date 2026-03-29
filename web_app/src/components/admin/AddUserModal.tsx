@@ -48,8 +48,9 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ role, onClose }) => {
                 ...(role === 'artist' ? { artist_profile_attributes: { city, bio } } : {})
             });
             onClose();
-        } catch (err: any) {
-            setError(err.message || 'Failed to create user');
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Failed to create user';
+            setError(message);
         }
     };
 

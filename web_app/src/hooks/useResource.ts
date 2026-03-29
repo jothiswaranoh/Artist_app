@@ -1,30 +1,22 @@
-import { useState, useEffect, useCallback } from 'react';
-import api from '../services/api';
+import { useQuery } from '@tanstack/react-query';
+import { apiService } from '../services/api';
 
 export function useResource<T>(url: string) {
-    const [data, setData] = useState<T | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const {
+        data,
+        isLoading: loading,
+        error: queryError,
+        refetch,
+    } = useQuery<T>({
+        queryKey: ['resource', url],
+        queryFn: async () => {
+            const response = await apiService.get<T>(url);
+            return (response.data as T) ?? (null as unknown as T);
+        },
+        staleTime: 30_000,
+    });
 
-    const fetchData = useCallback(async () => {
-        setLoading(true);
-        try {
-            const response = await api.get(url);
-            if (response.data.success) {
-                setData(response.data.data);
-            } else {
-                setError(response.data.message || 'Failed to fetch data');
-            }
-        } catch (err: any) {
-            setError(err.response?.data?.message || err.message || 'An error occurred');
-        } finally {
-            setLoading(false);
-        }
-    }, [url]);
+    const error = queryError ? (queryError instanceof Error ? queryError.message : String(queryError)) : null;
 
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
-
-    return { data, loading, error, reload: fetchData };
+    return { data: data ?? null, loading, error, reload: refetch };
 }

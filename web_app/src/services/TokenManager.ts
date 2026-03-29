@@ -1,7 +1,7 @@
 export class TokenManager {
     private static readonly ACCESS_TOKEN_KEY = 'access_token';
 
-    static async getAccessToken(): Promise<string | null> {
+    static getAccessToken(): string | null {
         try {
             return localStorage.getItem(this.ACCESS_TOKEN_KEY);
         } catch (error) {
@@ -10,7 +10,7 @@ export class TokenManager {
         }
     }
 
-    static async setToken(token: string): Promise<void> {
+    static setToken(token: string): void {
         try {
             localStorage.setItem(this.ACCESS_TOKEN_KEY, token);
         } catch (error) {
@@ -18,7 +18,7 @@ export class TokenManager {
         }
     }
 
-    static async clearToken(): Promise<void> {
+    static clearToken(): void {
         try {
             localStorage.removeItem(this.ACCESS_TOKEN_KEY);
         } catch (error) {
@@ -26,9 +26,9 @@ export class TokenManager {
         }
     }
 
-    static async hasValidToken(): Promise<boolean> {
+    static hasValidToken(): boolean {
         try {
-            const token = await this.getAccessToken();
+            const token = this.getAccessToken();
 
             if (!token) return false;
 
@@ -46,5 +46,4 @@ export class TokenManager {
             return false;
         }
     }
-
 }

@@ -11,25 +11,31 @@ export interface Availability {
     updated_at: string;
 }
 
+interface AvailabilitiesPayload {
+    availabilities?: Availability[];
+}
+
 export const AvailabilityService = {
-    getAll: async () => {
-        const response = await apiService.get('/availabilities');
-        return response.data;
+    getAll: async (): Promise<Availability[]> => {
+        const response = await apiService.get<AvailabilitiesPayload | Availability[]>('/availabilities');
+        const payload = response.data;
+
+        if (Array.isArray(payload)) return payload;
+        return payload?.availabilities ?? [];
     },
-    getById: async (id: string) => {
-        const response = await apiService.get(`/availabilities/${id}`);
-        return response.data;
+    getById: async (id: string): Promise<Availability> => {
+        const response = await apiService.get<Availability>(`/availabilities/${id}`);
+        return response.data as Availability;
     },
-    create: async (data: Partial<Availability>) => {
-        const response = await apiService.post('/availabilities', { availability: data });
-        return response.data;
+    create: async (data: Partial<Availability>): Promise<Availability> => {
+        const response = await apiService.post<Availability>('/availabilities', { availability: data });
+        return response.data as Availability;
     },
-    update: async (id: string, data: Partial<Availability>) => {
-        const response = await apiService.patch(`/availabilities/${id}`, { availability: data });
-        return response.data;
+    update: async (id: string, data: Partial<Availability>): Promise<Availability> => {
+        const response = await apiService.patch<Availability>(`/availabilities/${id}`, { availability: data });
+        return response.data as Availability;
     },
-    delete: async (id: string) => {
-        const response = await apiService.delete(`/availabilities/${id}`);
-        return response.data;
+    delete: async (id: string): Promise<void> => {
+        await apiService.delete(`/availabilities/${id}`);
     }
 };

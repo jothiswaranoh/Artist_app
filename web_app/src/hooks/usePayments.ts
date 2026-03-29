@@ -13,10 +13,8 @@ export const usePayments = () => {
         refetch
     } = useQuery({
         queryKey: ['payments'],
-        queryFn: async () => {
-            const data = await PaymentService.getAll();
-            return data as Payment[];
-        }
+        queryFn: () => PaymentService.getAll(),
+        staleTime: 30_000,
     });
 
     const createMutation = useMutation({
@@ -25,7 +23,7 @@ export const usePayments = () => {
             queryClient.invalidateQueries({ queryKey: ['payments'] });
             showToast('Payment created successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to create payment', 'error');
         }
     });
@@ -37,7 +35,7 @@ export const usePayments = () => {
             queryClient.invalidateQueries({ queryKey: ['payments'] });
             showToast('Payment updated successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to update payment', 'error');
         }
     });
@@ -48,7 +46,7 @@ export const usePayments = () => {
             queryClient.invalidateQueries({ queryKey: ['payments'] });
             showToast('Payment deleted successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to delete payment', 'error');
         }
     });
@@ -58,9 +56,9 @@ export const usePayments = () => {
         isLoading,
         error,
         refetch,
-        createPayment: createMutation.mutate,
-        updatePayment: updateMutation.mutate,
-        deletePayment: deleteMutation.mutate,
+        createPayment: createMutation.mutateAsync,
+        updatePayment: updateMutation.mutateAsync,
+        deletePayment: deleteMutation.mutateAsync,
         isCreating: createMutation.isPending,
         isUpdating: updateMutation.isPending,
         isDeleting: deleteMutation.isPending

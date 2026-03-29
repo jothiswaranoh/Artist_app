@@ -38,14 +38,14 @@ const apiClient = axios.create({
 // Request interceptor
 // --------------------
 apiClient.interceptors.request.use(
-    async (config: InternalAxiosRequestConfig) => {
+    (config: InternalAxiosRequestConfig) => {
         const isAuthEndpoint =
             config.url?.includes('/login') ||
             config.url?.includes('/signup') ||
             config.url?.includes('/refresh');
 
         if (!isAuthEndpoint) {
-            const token = await TokenManager.getAccessToken();
+            const token = TokenManager.getAccessToken();
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -75,7 +75,11 @@ apiClient.interceptors.response.use(
         }
         return response;
     },
+<<<<<<< HEAD
     async (error: AxiosError) => {
+=======
+    (error: AxiosError) => {
+>>>>>>> fb30494 (fixed some changes in ui branch)
         if (import.meta.env.DEV) {
             console.error(
                 `❌ ${error.config?.method?.toUpperCase()} ${error.config?.url}`,
@@ -88,9 +92,8 @@ apiClient.interceptors.response.use(
         if (error.response?.status === 401) {
             const originalRequest = error.config;
             if (!originalRequest?.url?.includes('/login') && !originalRequest?.url?.includes('/signup')) {
-                await TokenManager.clearToken();
-                localStorage.removeItem('user'); // Also remove user data
-                // Redirect to login or dispatch an event if needed
+                TokenManager.clearToken();
+                localStorage.removeItem('user');
                 if (typeof window !== 'undefined') {
                     window.dispatchEvent(new CustomEvent('auth-logout', { detail: { reason: 'unauthorized' } }));
                     if (window.location.pathname !== '/login') {

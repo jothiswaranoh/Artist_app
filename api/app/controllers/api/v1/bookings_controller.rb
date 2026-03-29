@@ -6,7 +6,7 @@ module Api
 
       def create
         @resource = Booking.new(resource_params)
-        
+
         # Auto-assign customer_id if current user is a customer
         if current_user.customer?
           @resource.customer_id = current_user.id
@@ -24,7 +24,10 @@ module Api
         authorize! :create, @resource
 
         if @resource.save
-          render_success(data: @resource, status: :created)
+          render_success(
+            data: BookingSerializer.new(@resource),
+            status: :created
+          )
         else
           render_error(errors: @resource.errors.full_messages)
         end
@@ -32,15 +35,34 @@ module Api
 
       def index
         @bookings = paginate(collection)
-        render_paginated_success(@bookings, message: "Bookings retrieved successfully")
+        render_paginated_success(
+          @bookings,
+          serialized_data: ActiveModelSerializers::SerializableResource.new(
+            @bookings,
+            each_serializer: BookingSerializer
+          ),
+          message: "Bookings retrieved successfully"
+        )
       end
 
       # GET /api/v1/bookings/my_bookings
       # Returns bookings where the current user is the customer
       def my_bookings
-        bookings = Booking.where(customer_id: current_user.id).order(booking_date: :desc)
-        bookings = paginate(bookings)
-        render_paginated_success(bookings, message: "Your bookings retrieved successfully")
+        bookings = paginate(
+          Booking
+            .for_customer(current_user.id)
+            .includes(:service, :artist_profile, :payment, :customer)
+            .reorder(booking_date: :desc, created_at: :desc)
+        )
+
+        render_paginated_success(
+          bookings,
+          serialized_data: ActiveModelSerializers::SerializableResource.new(
+            bookings,
+            each_serializer: BookingSerializer
+          ),
+          message: "Your bookings retrieved successfully"
+        )
       end
 
       # GET /api/v1/bookings/artist_bookings
@@ -53,13 +75,21 @@ module Api
 
         bookings = Booking.where(artist_profile_id: profile.id).order(booking_date: :desc)
         bookings = paginate(bookings)
-        render_paginated_success(bookings, message: "Artist bookings retrieved successfully")
+        render_paginated_success(
+          bookings,
+          serialized_data: ActiveModelSerializers::SerializableResource.new(
+            bookings,
+            each_serializer: BookingSerializer
+          ),
+          message: "Artist bookings retrieved successfully"
+        )
       end
 
       def destroy
         # load_and_authorize_resource sets @booking and handles authorization
         # Just need to destroy it and respond
         authorize! :destroy, @booking
+        @booking.destroy
         render_success(message: 'Booking deleted successfully')
       end
 
@@ -74,13 +104,18 @@ module Api
       end
 
       def collection
-        if current_user.role == 'admin'
-          Booking.all
-        elsif current_user.role == 'artist'
-          Booking.where(artist_profile_id: current_user.artist_profile&.id)
-        else
-          Booking.where(customer_id: current_user.id)
-        end.order(booking_date: :desc)
+        base = Booking.includes(:service, :artist_profile, :payment, :customer)
+
+        scoped =
+          if current_user.role == 'admin'
+            base
+          elsif current_user.role == 'artist'
+            base.where(artist_profile_id: current_user.artist_profile&.id)
+          else
+            base.where(customer_id: current_user.id)
+          end
+
+        scoped.reorder(booking_date: :desc, created_at: :desc)
       end
     end
   end

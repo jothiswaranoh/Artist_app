@@ -15,10 +15,17 @@ export interface Booking {
     updated_at: string;
 }
 
+interface BookingsPayload {
+    bookings?: Booking[];
+}
+
 export const BookingService = {
-    getAll: async () => {
-        const response = await apiService.get('/bookings');
-        return response.data;
+    getAll: async (): Promise<Booking[]> => {
+        const response = await apiService.get<BookingsPayload | Booking[]>('/bookings');
+        const payload = response.data;
+
+        if (Array.isArray(payload)) return payload;
+        return payload?.bookings ?? [];
     },
     getById: async (id: string) => {
         const response = await apiService.get(`/bookings/${id}`);

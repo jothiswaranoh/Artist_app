@@ -11,10 +11,17 @@ export interface Review {
     updated_at: string;
 }
 
+interface ReviewsPayload {
+    reviews?: Review[];
+}
+
 export const ReviewService = {
-    getAll: async () => {
-        const response = await apiService.get('/reviews');
-        return response.data;
+    getAll: async (): Promise<Review[]> => {
+        const response = await apiService.get<ReviewsPayload | Review[]>('/reviews');
+        const payload = response.data;
+
+        if (Array.isArray(payload)) return payload;
+        return payload?.reviews ?? [];
     },
     getById: async (id: string) => {
         const response = await apiService.get(`/reviews/${id}`);

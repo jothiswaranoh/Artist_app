@@ -39,12 +39,13 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose, allowedRol
                     phone,
                     address,
                     preferences,
-                    ...(role === 'artist' ? { artist_profile_attributes: { id: user.artist_profile?.id, city, bio } as any } : {})
+                    ...(role === 'artist' ? { artist_profile_attributes: { id: user.artist_profile?.id, city, bio } } : {})
                 }
             });
-            onClose(); // Close modal on success
-        } catch (err: any) {
-            setError(err.message || 'Failed to update user');
+            onClose();
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Failed to update user';
+            setError(message);
         }
     };
 

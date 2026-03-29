@@ -26,25 +26,31 @@ export interface ArtistProfile {
     reviews?: any[];
 }
 
+interface ArtistProfilesPayload {
+    artist_profiles?: ArtistProfile[];
+}
+
 export const ArtistProfileService = {
-    getAll: async () => {
-        const response = await apiService.get('/artist_profiles');
-        return response.data;
+    getAll: async (): Promise<ArtistProfile[]> => {
+        const response = await apiService.get<ArtistProfilesPayload | ArtistProfile[]>('/artist_profiles');
+        const payload = response.data;
+
+        if (Array.isArray(payload)) return payload;
+        return payload?.artist_profiles ?? [];
     },
-    getById: async (id: string) => {
-        const response = await apiService.get(`/artist_profiles/${id}`);
-        return response.data;
+    getById: async (id: string): Promise<ArtistProfile> => {
+        const response = await apiService.get<ArtistProfile>(`/artist_profiles/${id}`);
+        return response.data as ArtistProfile;
     },
-    create: async (data: Partial<ArtistProfile>) => {
-        const response = await apiService.post('/artist_profiles', { artist_profile: data });
-        return response.data;
+    create: async (data: Partial<ArtistProfile>): Promise<ArtistProfile> => {
+        const response = await apiService.post<ArtistProfile>('/artist_profiles', { artist_profile: data });
+        return response.data as ArtistProfile;
     },
-    update: async (id: string, data: Partial<ArtistProfile>) => {
-        const response = await apiService.patch(`/artist_profiles/${id}`, { artist_profile: data });
-        return response.data;
+    update: async (id: string, data: Partial<ArtistProfile>): Promise<ArtistProfile> => {
+        const response = await apiService.patch<ArtistProfile>(`/artist_profiles/${id}`, { artist_profile: data });
+        return response.data as ArtistProfile;
     },
-    delete: async (id: string) => {
-        const response = await apiService.delete(`/artist_profiles/${id}`);
-        return response.data;
+    delete: async (id: string): Promise<void> => {
+        await apiService.delete(`/artist_profiles/${id}`);
     }
 };
