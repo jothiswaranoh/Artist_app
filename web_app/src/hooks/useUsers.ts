@@ -14,6 +14,7 @@ export const useUsers = (page = 1, perPage = 10, role?: string) => {
     } = useQuery({
         queryKey: ['users', page, perPage, role],
         queryFn: () => UserService.getAllUsers(page, perPage, role),
+        staleTime: 30_000,
     });
 
     const users: User[] = data?.data ?? [];
@@ -32,7 +33,7 @@ export const useUsers = (page = 1, perPage = 10, role?: string) => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
             showToast('Created successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to create', 'error');
         }
     });
@@ -45,7 +46,7 @@ export const useUsers = (page = 1, perPage = 10, role?: string) => {
             queryClient.invalidateQueries({ queryKey: ['artist_profiles'] });
             showToast('User updated successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to update user', 'error');
         }
     });
@@ -57,7 +58,7 @@ export const useUsers = (page = 1, perPage = 10, role?: string) => {
             queryClient.invalidateQueries({ queryKey: ['artist_profiles'] });
             showToast('User deleted successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to delete user', 'error');
         }
     });
@@ -69,8 +70,8 @@ export const useUsers = (page = 1, perPage = 10, role?: string) => {
         error,
         refetch,
         createUser: createMutation.mutateAsync,
-        updateUser: updateMutation.mutate,
-        deleteUser: deleteMutation.mutate,
+        updateUser: updateMutation.mutateAsync,
+        deleteUser: deleteMutation.mutateAsync,
         isCreating: createMutation.isPending,
         isUpdating: updateMutation.isPending,
         isDeleting: deleteMutation.isPending

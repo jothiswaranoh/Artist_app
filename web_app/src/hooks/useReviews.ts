@@ -13,10 +13,8 @@ export const useReviews = () => {
         refetch
     } = useQuery({
         queryKey: ['reviews'],
-        queryFn: async () => {
-            const data = await ReviewService.getAll();
-            return data as Review[];
-        }
+        queryFn: () => ReviewService.getAll(),
+        staleTime: 30_000,
     });
 
     const createMutation = useMutation({
@@ -25,7 +23,7 @@ export const useReviews = () => {
             queryClient.invalidateQueries({ queryKey: ['reviews'] });
             showToast('Review created successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to create review', 'error');
         }
     });
@@ -37,7 +35,7 @@ export const useReviews = () => {
             queryClient.invalidateQueries({ queryKey: ['reviews'] });
             showToast('Review updated successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to update review', 'error');
         }
     });
@@ -48,7 +46,7 @@ export const useReviews = () => {
             queryClient.invalidateQueries({ queryKey: ['reviews'] });
             showToast('Review deleted successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to delete review', 'error');
         }
     });
@@ -58,9 +56,9 @@ export const useReviews = () => {
         isLoading,
         error,
         refetch,
-        createReview: createMutation.mutate,
-        updateReview: updateMutation.mutate,
-        deleteReview: deleteMutation.mutate,
+        createReview: createMutation.mutateAsync,
+        updateReview: updateMutation.mutateAsync,
+        deleteReview: deleteMutation.mutateAsync,
         isCreating: createMutation.isPending,
         isUpdating: updateMutation.isPending,
         isDeleting: deleteMutation.isPending

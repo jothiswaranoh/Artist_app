@@ -10,6 +10,12 @@ module JsonWebToken
 
   def self.decode(token)
     decoded = JWT.decode(token, SECRET_KEY)[0]
-    HashWithIndifferentAccess.new decoded
+    payload = HashWithIndifferentAccess.new(decoded)
+
+    if payload[:exp].present? && Time.at(payload[:exp]) < Time.current
+      raise JWT::ExpiredSignature, 'Token has expired'
+    end
+
+    payload
   end
 end

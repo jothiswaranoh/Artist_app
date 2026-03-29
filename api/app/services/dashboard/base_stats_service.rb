@@ -13,26 +13,29 @@ module Dashboard
     attr_reader :user
 
     def aggregate_booking_stats(query, extra_filters = {})
-      # extra_filters can be things like { upcoming: ['booking_date >= ?', Date.today] }
-      
-      select_parts = ["COUNT(*) as total_bookings"]
-      
-      # Status counts
-      ['pending', 'confirmed', 'completed', 'cancelled'].each do |status|
-        select_parts << "COUNT(*) FILTER (WHERE status = '#{status}') as #{status}_bookings"
+      relation = query.except(:select, :order)
+
+      select_parts = ["COUNT(*) AS total_bookings"]
+
+      Booking::STATUSES.each do |status|
+        select_parts << "COUNT(*) FILTER (WHERE status = '#{status}') AS #{status}_bookings"
       end
 
       # Extra calculations
       extra_filters.each do |key, (condition, *args)|
         sanitized = Booking.send(:sanitize_sql_array, [condition, *args])
-        select_parts << "COUNT(*) FILTER (WHERE #{sanitized}) as #{key}"
+        select_parts << "COUNT(*) FILTER (WHERE #{sanitized}) AS #{key}"
       end
 
-      query.select(select_parts.join(', ')).take&.attributes&.symbolize_keys || {}
+      relation
+        .select(select_parts.join(', '))
+        .take
+        &.attributes
+        &.symbolize_keys || {}
     end
 
     def sum_revenue(query)
-      Payment.joins(:booking).merge(query).sum(:amount).to_f
+      Payment.joins(:booking).merge(query.except(:select, :order)).sum(:amount).to_f
     end
   end
 end
