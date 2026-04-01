@@ -13,10 +13,8 @@ export const useArtistProfiles = () => {
         refetch
     } = useQuery({
         queryKey: ['artist_profiles'],
-        queryFn: async () => {
-            const data = await ArtistProfileService.getAll();
-            return data as ArtistProfile[];
-        }
+        queryFn: () => ArtistProfileService.getAll(),
+        staleTime: 30_000,
     });
 
     const createMutation = useMutation({
@@ -25,7 +23,7 @@ export const useArtistProfiles = () => {
             queryClient.invalidateQueries({ queryKey: ['artist_profiles'] });
             showToast('Artist profile created successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to create artist profile', 'error');
         }
     });
@@ -37,7 +35,7 @@ export const useArtistProfiles = () => {
             queryClient.invalidateQueries({ queryKey: ['artist_profiles'] });
             showToast('Artist profile updated successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to update artist profile', 'error');
         }
     });
@@ -48,21 +46,19 @@ export const useArtistProfiles = () => {
             queryClient.invalidateQueries({ queryKey: ['artist_profiles'] });
             showToast('Artist profile deleted successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to delete artist profile', 'error');
         }
     });
-
-
 
     return {
         artistProfiles,
         isLoading,
         error,
         refetch,
-        createArtistProfile: createMutation.mutate,
-        updateArtistProfile: updateMutation.mutate,
-        deleteArtistProfile: deleteMutation.mutate,
+        createArtistProfile: createMutation.mutateAsync,
+        updateArtistProfile: updateMutation.mutateAsync,
+        deleteArtistProfile: deleteMutation.mutateAsync,
         isCreating: createMutation.isPending,
         isUpdating: updateMutation.isPending,
         isDeleting: deleteMutation.isPending

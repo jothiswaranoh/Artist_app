@@ -62,6 +62,13 @@ const BrowseArtistsPage: React.FC = () => {
     const getDisplayName = (artist: ArtistProfile) => artist.name || 'Artist';
     const getInitial = (artist: ArtistProfile) => (artist.name || 'A').charAt(0).toUpperCase();
 
+    const todayISO = useMemo(() => new Date().toISOString().split('T')[0], []);
+    const maxBookingISO = useMemo(() => {
+        const d = new Date();
+        d.setFullYear(d.getFullYear() + 1);
+        return d.toISOString().split('T')[0];
+    }, []);
+
     const openBooking = (service: ServiceOffering, artistProfileId: string) => {
         setBookingService(service);
         setBookingForm({
@@ -384,7 +391,8 @@ const BrowseArtistsPage: React.FC = () => {
                                         <label>Date <span style={{ color: '#f87171' }}>*</span></label>
                                         <input
                                             type="date"
-                                            min={new Date().toISOString().split('T')[0]}
+                                            min={todayISO}
+                                            max={maxBookingISO}
                                             value={bookingForm.booking_date}
                                             onChange={e => setBookingForm({ ...bookingForm, booking_date: e.target.value })}
                                         />

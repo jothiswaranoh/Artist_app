@@ -11,25 +11,31 @@ export interface Payment {
     updated_at: string;
 }
 
+interface PaymentsPayload {
+    payments?: Payment[];
+}
+
 export const PaymentService = {
-    getAll: async () => {
-        const response = await apiService.get('/payments');
-        return response.data;
+    getAll: async (): Promise<Payment[]> => {
+        const response = await apiService.get<PaymentsPayload | Payment[]>('/payments');
+        const payload = response.data;
+
+        if (Array.isArray(payload)) return payload;
+        return payload?.payments ?? [];
     },
-    getById: async (id: string) => {
-        const response = await apiService.get(`/payments/${id}`);
-        return response.data;
+    getById: async (id: string): Promise<Payment> => {
+        const response = await apiService.get<Payment>(`/payments/${id}`);
+        return response.data as Payment;
     },
-    create: async (data: Partial<Payment>) => {
-        const response = await apiService.post('/payments', { payment: data });
-        return response.data;
+    create: async (data: Partial<Payment>): Promise<Payment> => {
+        const response = await apiService.post<Payment>('/payments', { payment: data });
+        return response.data as Payment;
     },
-    update: async (id: string, data: Partial<Payment>) => {
-        const response = await apiService.patch(`/payments/${id}`, { payment: data });
-        return response.data;
+    update: async (id: string, data: Partial<Payment>): Promise<Payment> => {
+        const response = await apiService.patch<Payment>(`/payments/${id}`, { payment: data });
+        return response.data as Payment;
     },
-    delete: async (id: string) => {
-        const response = await apiService.delete(`/payments/${id}`);
-        return response.data;
+    delete: async (id: string): Promise<void> => {
+        await apiService.delete(`/payments/${id}`);
     }
 };

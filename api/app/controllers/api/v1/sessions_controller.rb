@@ -5,23 +5,23 @@ module Api
 
       # POST /api/v1/login
       def create
-        @user = User.find_by_email(params[:email])
-        if @user&.authenticate(params[:password])
-          token = ::JsonWebToken.encode(user_id: @user.id)
-          time = Time.now + 24.hours.to_i
-          render_success(
-            data: { 
-              token: token, 
-              exp: time.strftime("%m-%d-%Y %H:%M"),
-              id: @user.id,
-              email: @user.email,
-              role: @user.role
-            }, 
-            message: 'Login successful'
-          )
-        else
-          render_error(message: 'Invalid credentials', status: :unauthorized)
-        end
+        @user = User.find_by_email(login_params[:email].downcase)
+        return render_error(message: 'Invalid credentials', status: :unauthorized) unless @user&.authenticate(login_params[:password])
+
+        token = ::JsonWebToken.encode(user_id: @user.id)
+        exp   = 24.hours.from_now
+
+        render_success(
+          data: {
+            token: token,
+            exp: exp.utc.iso8601,
+            id: @user.id,
+            email: @user.email,
+            role: @user.role,
+            name: @user.name
+          },
+          message: 'Login successful'
+        )
       end
 
       # DELETE /api/v1/logout

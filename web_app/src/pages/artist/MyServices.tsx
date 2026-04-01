@@ -297,7 +297,7 @@ const MyServicesPage: React.FC = () => {
                             </div>
                             <div className="modal-actions">
                                 <button className="cancel-btn" onClick={() => setShowModal(false)}>Cancel</button>
-                                <button className="submit-btn" onClick={handleSubmit} disabled={!formData.name || !formData.price || isCreating || isUpdating}>
+                                <button className="submit-btn" onClick={handleSubmit} disabled={!formData.name || !formData.price || !formData.duration_minutes || isCreating || isUpdating}>
                                     {isCreating || isUpdating ? 'Saving...' : editingService ? 'Update' : 'Create'}
                                 </button>
                             </div>

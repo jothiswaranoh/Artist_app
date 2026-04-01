@@ -33,11 +33,12 @@ class User < ApplicationRecord
 
   def setup_artist_profile
     create_artist_profile(
-      name: name,
+      name: name.presence || email,
       bio: '',
-      city: '',
+      city: 'Unknown',
       experience_years: 0,
-      base_price: 0
+      base_price: 0,
+      is_approved: false
     )
   end
 

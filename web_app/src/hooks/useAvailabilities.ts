@@ -13,10 +13,8 @@ export const useAvailabilities = () => {
         refetch
     } = useQuery({
         queryKey: ['availabilities'],
-        queryFn: async () => {
-            const data = await AvailabilityService.getAll();
-            return data as Availability[];
-        }
+        queryFn: () => AvailabilityService.getAll(),
+        staleTime: 30_000,
     });
 
     const createMutation = useMutation({
@@ -25,7 +23,7 @@ export const useAvailabilities = () => {
             queryClient.invalidateQueries({ queryKey: ['availabilities'] });
             showToast('Availability created successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to create availability', 'error');
         }
     });
@@ -37,7 +35,7 @@ export const useAvailabilities = () => {
             queryClient.invalidateQueries({ queryKey: ['availabilities'] });
             showToast('Availability updated successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to update availability', 'error');
         }
     });
@@ -48,7 +46,7 @@ export const useAvailabilities = () => {
             queryClient.invalidateQueries({ queryKey: ['availabilities'] });
             showToast('Availability deleted successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to delete availability', 'error');
         }
     });
@@ -58,9 +56,9 @@ export const useAvailabilities = () => {
         isLoading,
         error,
         refetch,
-        createAvailability: createMutation.mutate,
-        updateAvailability: updateMutation.mutate,
-        deleteAvailability: deleteMutation.mutate,
+        createAvailability: createMutation.mutateAsync,
+        updateAvailability: updateMutation.mutateAsync,
+        deleteAvailability: deleteMutation.mutateAsync,
         isCreating: createMutation.isPending,
         isUpdating: updateMutation.isPending,
         isDeleting: deleteMutation.isPending

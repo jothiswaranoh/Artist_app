@@ -13,10 +13,8 @@ export const useServiceOfferings = () => {
         refetch
     } = useQuery({
         queryKey: ['services'],
-        queryFn: async () => {
-            const data = await ServiceOfferingService.getAll();
-            return data as ServiceOffering[];
-        }
+        queryFn: () => ServiceOfferingService.getAll(),
+        staleTime: 30_000,
     });
 
     const createMutation = useMutation({
@@ -25,7 +23,7 @@ export const useServiceOfferings = () => {
             queryClient.invalidateQueries({ queryKey: ['services'] });
             showToast('Service created successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to create service', 'error');
         }
     });
@@ -37,7 +35,7 @@ export const useServiceOfferings = () => {
             queryClient.invalidateQueries({ queryKey: ['services'] });
             showToast('Service updated successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to update service', 'error');
         }
     });
@@ -48,7 +46,7 @@ export const useServiceOfferings = () => {
             queryClient.invalidateQueries({ queryKey: ['services'] });
             showToast('Service deleted successfully', 'success');
         },
-        onError: (err: any) => {
+        onError: (err: Error & { message?: string }) => {
             showToast(err.message || 'Failed to delete service', 'error');
         }
     });
@@ -58,9 +56,9 @@ export const useServiceOfferings = () => {
         isLoading,
         error,
         refetch,
-        createServiceOffering: createMutation.mutate,
-        updateServiceOffering: updateMutation.mutate,
-        deleteServiceOffering: deleteMutation.mutate,
+        createServiceOffering: createMutation.mutateAsync,
+        updateServiceOffering: updateMutation.mutateAsync,
+        deleteServiceOffering: deleteMutation.mutateAsync,
         isCreating: createMutation.isPending,
         isUpdating: updateMutation.isPending,
         isDeleting: deleteMutation.isPending

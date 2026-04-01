@@ -11,4 +11,6 @@ class Booking < ApplicationRecord
 
   scope :upcoming, -> { where('booking_date >= ?', Date.current).where(status: ['pending', 'confirmed']) }
   scope :for_customer, ->(customer_id) { where(customer_id: customer_id) }
+  scope :for_artist, ->(artist_profile_id) { where(artist_profile_id: artist_profile_id) }
+  scope :recent_first, -> { order(booking_date: :desc, created_at: :desc) }
 end

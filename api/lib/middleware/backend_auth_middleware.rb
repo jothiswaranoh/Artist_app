@@ -55,6 +55,12 @@ module Middleware
             message: 'Invalid token',
             errors: [e.message]
           }.to_json]]
+        rescue JWT::ExpiredSignature => e
+          return [401, { 'Content-Type' => 'application/json' }, [{ 
+            status: 'error',
+            message: 'Token expired',
+            errors: [e.message]
+          }.to_json]]
         rescue ActiveRecord::RecordNotFound => e
           return [401, { 'Content-Type' => 'application/json' }, [{ 
             status: 'error',
