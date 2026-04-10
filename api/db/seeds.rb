@@ -80,6 +80,8 @@ artist_profiles = ArtistProfile.all
   customer = customers.sample
   artist_profile = artist_profiles.sample
   service = artist_profile.services.sample
+  next unless service
+
   booking_date = Date.current + rand(1..10).days
   
   booking = Booking.create!(
