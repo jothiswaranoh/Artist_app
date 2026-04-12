@@ -14,8 +14,8 @@ export const useServiceOfferings = () => {
     } = useQuery({
         queryKey: ['services'],
         queryFn: async () => {
-            const data = await ServiceOfferingService.getAll();
-            return data as ServiceOffering[];
+            const data: any = await ServiceOfferingService.getAll();
+            return (Array.isArray(data) ? data : data?.data || data?.service_offerings || []) as ServiceOffering[];
         }
     });
 

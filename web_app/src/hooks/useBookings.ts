@@ -14,8 +14,8 @@ export const useBookings = () => {
     } = useQuery({
         queryKey: ['bookings'],
         queryFn: async () => {
-            const data = await BookingService.getAll();
-            return data as Booking[];
+            const data: any = await BookingService.getAll();
+            return (Array.isArray(data) ? data : data?.data || data?.bookings || []) as Booking[];
         }
     });
 

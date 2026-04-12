@@ -14,6 +14,7 @@ import BrowseArtistsPage from './pages/customer/BrowseArtists';
 import { AuthService } from './services/AuthService';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from './components/common/Toast';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 const queryClient = new QueryClient();
 
@@ -53,22 +54,22 @@ function App() {
               <Route index element={<Dashboard />} />
 
               {/* Admin-only Pages */}
-              <Route path="users" element={<RoleGuard allowedRoles={['admin']}><UsersPage /></RoleGuard>} />
-              <Route path="admins" element={<RoleGuard allowedRoles={['admin']}><AdminsPage /></RoleGuard>} />
-              <Route path="artists" element={<RoleGuard allowedRoles={['admin']}><ArtistsPage /></RoleGuard>} />
+              <Route path="users" element={<ErrorBoundary><RoleGuard allowedRoles={['admin']}><UsersPage /></RoleGuard></ErrorBoundary>} />
+              <Route path="admins" element={<ErrorBoundary><RoleGuard allowedRoles={['admin']}><AdminsPage /></RoleGuard></ErrorBoundary>} />
+              <Route path="artists" element={<ErrorBoundary><RoleGuard allowedRoles={['admin']}><ArtistsPage /></RoleGuard></ErrorBoundary>} />
 
               {/* Artist-only Pages */}
-              <Route path="my-services" element={<RoleGuard allowedRoles={['artist']}><MyServicesPage /></RoleGuard>} />
-              <Route path="my-bookings" element={<RoleGuard allowedRoles={['artist', 'customer']}><MyBookingsPage /></RoleGuard>} />
-              <Route path="my-reviews" element={<RoleGuard allowedRoles={['artist', 'customer']}><MyReviewsPage /></RoleGuard>} />
+              <Route path="my-services" element={<ErrorBoundary><RoleGuard allowedRoles={['artist']}><MyServicesPage /></RoleGuard></ErrorBoundary>} />
+              <Route path="my-bookings" element={<ErrorBoundary><RoleGuard allowedRoles={['artist', 'customer']}><MyBookingsPage /></RoleGuard></ErrorBoundary>} />
+              <Route path="my-reviews" element={<ErrorBoundary><RoleGuard allowedRoles={['artist', 'customer']}><MyReviewsPage /></RoleGuard></ErrorBoundary>} />
 
               {/* Customer-only Pages */}
-              <Route path="find-artists" element={<RoleGuard allowedRoles={['customer']}><BrowseArtistsPage /></RoleGuard>} />
+              <Route path="find-artists" element={<ErrorBoundary><RoleGuard allowedRoles={['customer']}><BrowseArtistsPage /></RoleGuard></ErrorBoundary>} />
 
               {/* Admin routes for services/bookings/reviews (admin sees all) */}
-              <Route path="services" element={<RoleGuard allowedRoles={['admin']}><MyServicesPage /></RoleGuard>} />
-              <Route path="bookings" element={<RoleGuard allowedRoles={['admin']}><MyBookingsPage /></RoleGuard>} />
-              <Route path="reviews" element={<RoleGuard allowedRoles={['admin']}><MyReviewsPage /></RoleGuard>} />
+              <Route path="services" element={<ErrorBoundary><RoleGuard allowedRoles={['admin']}><MyServicesPage /></RoleGuard></ErrorBoundary>} />
+              <Route path="bookings" element={<ErrorBoundary><RoleGuard allowedRoles={['admin']}><MyBookingsPage /></RoleGuard></ErrorBoundary>} />
+              <Route path="reviews" element={<ErrorBoundary><RoleGuard allowedRoles={['admin']}><MyReviewsPage /></RoleGuard></ErrorBoundary>} />
 
               {/* Shared Pages */}
               <Route path="settings" element={<div style={{ padding: '24px', color: '#94a3b8' }}><h1 style={{ color: '#f8fafc', marginBottom: '8px' }}>Account Settings</h1><p>Settings page coming soon.</p></div>} />

@@ -10,10 +10,10 @@ export function useResource<T>(url: string) {
         setLoading(true);
         try {
             const response = await api.get(url);
-            if (response.data.success) {
-                setData(response.data.data);
+            if (response.success) {
+                setData(response.data);
             } else {
-                setError(response.data.message || 'Failed to fetch data');
+                setError(response.message || 'Failed to fetch data');
             }
         } catch (err: any) {
             setError(err.response?.data?.message || err.message || 'An error occurred');

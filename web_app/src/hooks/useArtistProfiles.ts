@@ -14,8 +14,8 @@ export const useArtistProfiles = () => {
     } = useQuery({
         queryKey: ['artist_profiles'],
         queryFn: async () => {
-            const data = await ArtistProfileService.getAll();
-            return data as ArtistProfile[];
+            const data: any = await ArtistProfileService.getAll();
+            return (Array.isArray(data) ? data : data?.data || data?.artist_profiles || []) as ArtistProfile[];
         }
     });
 

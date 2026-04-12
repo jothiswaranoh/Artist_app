@@ -14,8 +14,8 @@ export const useReviews = () => {
     } = useQuery({
         queryKey: ['reviews'],
         queryFn: async () => {
-            const data = await ReviewService.getAll();
-            return data as Review[];
+            const data: any = await ReviewService.getAll();
+            return (Array.isArray(data) ? data : data?.data || data?.reviews || []) as Review[];
         }
     });
 

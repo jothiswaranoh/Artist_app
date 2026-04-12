@@ -14,6 +14,7 @@ export const useUsers = (page = 1, perPage = 10, role?: string) => {
     } = useQuery({
         queryKey: ['users', page, perPage, role],
         queryFn: () => UserService.getAllUsers(page, perPage, role),
+        retry: false,
     });
 
     const users: User[] = data?.data ?? [];
