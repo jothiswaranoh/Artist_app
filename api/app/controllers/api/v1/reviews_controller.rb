@@ -56,9 +56,12 @@ module Api
         reviews =
         if current_user.admin?
            base_scope
+        elsif params[:artist_profile_id]
+           base_scope.where(artist_profile_id: params[:artist_profile_id])
+        elsif current_user.customer?
+           base_scope.where(customer_id: current_user.id)
         else
-          return render_error(message: "artist_profile_id is required") unless params[:artist_profile_id]
-          base_scope.where(artist_profile_id: params[:artist_profile_id])
+          return render_error(message: "Not authorized", status: :forbidden)
         end
         reviews = paginate(reviews)
         render_paginated_success(
