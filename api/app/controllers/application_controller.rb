@@ -23,4 +23,16 @@ class ApplicationController < ActionController::API
     Rails.logger.error "[StandardError] #{e.class}: #{e.message}\n#{e.backtrace.first(5).join("\n")}"
     render_error(message: 'Internal server error', status: :internal_server_error, errors: [e.message])
   end
+
+  def authorize_admin
+    return if current_user&.admin?
+
+    render_error(message: "Unauthorized access", status: :forbidden)
+  end
+
+  def authorize_artist
+    return if current_user&.approved_artist?
+
+    render_error(message: "Access denied", status: :forbidden)
+  end
 end

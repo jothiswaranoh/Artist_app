@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # Authentication
+      post "refresh", to: "sessions#refresh"
       post "login", to: "sessions#create"
       post "signup", to: "registrations#create"
       patch "password/update", to: "passwords#update"

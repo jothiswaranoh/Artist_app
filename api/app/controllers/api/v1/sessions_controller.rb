@@ -7,15 +7,16 @@ module Api
       def create
         @user = User.find_by_email(login_params[:email])
         if @user&.authenticate(login_params[:password])
-          if @user.status != "active"
-             return render_error(message: "Account is not active", status: :forbidden)
-          end
-          token = ::JsonWebToken.encode(user_id: @user.id)
-          time = Time.now + 24.hours.to_i
+          return render_error(message: "Account is not active", status: :forbidden) unless @user.status == "active"
+
+          access_token  = JsonWebToken.encode({ user_id: @user.id, type: "access" }, 1.hour.from_now)
+          refresh_token = JsonWebToken.encode({ user_id: @user.id, type: "refresh" }, 7.days.from_now)
+      
           render_success(
             data: { 
-              token: token, 
-              exp: time.strftime("%m-%d-%Y %H:%M"),
+              token: access_token, 
+              refresh_token: refresh_token,
+             exp: (Time.now + 1.hour).strftime("%m-%d-%Y %H:%M"),
               id: @user.id,
               name: @user.name,
               email: @user.email,
@@ -80,6 +81,29 @@ module Api
         render_success(
           message: "Account deleted successfully"
         )
+      end
+
+      def refresh
+        token = request.headers['Authorization']&.split(' ')&.last
+
+        return render_error(message: "Refresh token missing", status: :unauthorized) unless token
+
+        begin
+          decoded = JsonWebToken.decode(token)
+          return render_error(message: "Invalid token type", status: :unauthorized) unless decoded[:type] == "refresh"
+
+          user = User.find(decoded[:user_id])
+          return render_error(message: "Account is not active", status: :forbidden) unless user.status == "active"
+          
+          new_access_token = JsonWebToken.encode({ user_id: user.id, type: "access"  }, 1.hour.from_now)
+
+          render_success(
+            data: { token: new_access_token },
+            message: "Token refreshed successfully"
+          )
+        rescue JWT::DecodeError, ActiveRecord::RecordNotFound
+          render_error(message: "Invalid or expired refresh token", status: :unauthorized)
+        end
       end
         
       private
