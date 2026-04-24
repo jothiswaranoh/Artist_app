@@ -28,7 +28,11 @@ class User < ApplicationRecord
   def customer?
     role == 'customer'
   end
-
+  
+  def approved_artist?
+    role == "artist" && artist_profile&.is_approved
+  end
+  
   private
 
   def setup_artist_profile
