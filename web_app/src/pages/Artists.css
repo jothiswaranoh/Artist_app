@@ -826,3 +826,295 @@
     color: #e2e8f0;
     font-weight: 500;
 }
+
+/* ──────────────────────────────────────────── */
+/*  LIST VIEW (TABLE)                          */
+/* ──────────────────────────────────────────── */
+
+.artists-table-wrapper {
+    padding: 10px 16px 16px;
+}
+
+/* Table */
+.artists-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+/* Header */
+.artists-table thead th {
+    text-align: left;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Rows */
+.artist-row {
+    transition: var(--transition-fast);
+}
+
+.artist-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* Cells */
+.artists-table td {
+    padding: 14px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+}
+
+/* First column (avatar + name) */
+.artist-cell-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.artist-cell-main .artist-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+}
+
+.artist-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Actions */
+.artist-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+/* Reuse your existing button style */
+.artist-actions .artist-action-btn {
+    width: 30px;
+    height: 30px;
+}
+
+.view-toggle {
+    display: flex;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.toggle-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.toggle-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-primary);
+}
+
+.toggle-btn.active {
+    background: linear-gradient(135deg, #9400D3, #ED80E9);
+    color: white;
+}
+
+.artist-name-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.artist-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.artist-sub {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.artist-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.artist-actions .artist-action-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+}
+
+/* ── View Toggle (Grid / List) ── */
+.view-toggle {
+    display: flex;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 3px;
+}
+
+.toggle-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.toggle-btn.active {
+    background: rgba(148,0,211,0.2);
+    color: #ED80E9;
+}
+
+.toggle-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-primary);
+}
+
+/* ── Services List View ── */
+
+.services-table-wrapper {
+    padding: 12px 16px 16px;
+}
+
+.services-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+/* Header */
+.services-table thead th {
+    text-align: left;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Rows */
+.service-row {
+    transition: all 0.2s ease;
+}
+
+.service-row:hover {
+    background: rgba(255,255,255,0.04);
+}
+
+/* Cells */
+.services-table td {
+    padding: 14px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Service name + description */
+.service-cell-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.service-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.service-sub {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* Actions */
+.service-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.service-actions button {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.service-actions button:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.bookings-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bookings-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 12px;
+}
+
+.bookings-table td {
+  padding: 14px 12px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.booking-row:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+.booking-cell-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-name {
+  font-weight: 600;
+}
+
+.booking-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.booking-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

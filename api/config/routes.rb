@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       post "signup", to: "registrations#create"
       patch "password/update", to: "passwords#update"
       delete "logout", to: "sessions#destroy"
+      get "me", to: "sessions#me"
       get "profile", to: "sessions#me"
       patch "profile", to: "sessions#update_profile"
       delete "profile", to: "sessions#delete_profile"

@@ -47,10 +47,6 @@ const MyReviewsPage: React.FC = () => {
                         <p>See what your customers are saying</p>
                     </div>
                 </div>
-                <div className="page-header-badge">
-                    <span className="label">Avg</span>
-                    <span className="count">★ {avgRating}</span>
-                </div>
             </div>
 
             {/* Stats */}

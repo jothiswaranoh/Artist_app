@@ -90,7 +90,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ role, onClose }) => {
                     <button className="close-btn" onClick={onClose}><X size={16} /></button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="add-user-form">
+                <form onSubmit={handleSubmit} className="add-user-form" autoComplete="off">
                     <div className="admin-modal-body">
 
                         {/* Error Banner */}
@@ -128,6 +128,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ role, onClose }) => {
                                 <input
                                     type="email"
                                     value={email}
+                                    autoComplete="new-email"
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder={`enter_${role}_email@example.com`}
                                     required
@@ -172,6 +173,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ role, onClose }) => {
                                     <input
                                         type={showPassword ? 'text' : 'password'}
                                         value={password}
+                                        autoComplete="new-email"
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="Min. 6 chars"
                                         required
@@ -199,6 +201,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ role, onClose }) => {
                                     <input
                                         type={showConfirm ? 'text' : 'password'}
                                         value={passwordConfirmation}
+                                        autoComplete="new-email"
                                         onChange={(e) => setPasswordConfirmation(e.target.value)}
                                         placeholder="Re-enter"
                                         required
