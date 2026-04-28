@@ -134,9 +134,10 @@ export async function service<T = any>(
             const backendError = error.response?.data;
 
             const message =
+                backendError?.error?.errors?.[0] ||
+                backendError?.errors?.[0] ||
+                backendError?.error?.message ||
                 backendError?.message ||
-                backendError?.data?.message ||
-                backendError?.error ||
                 error.response?.statusText ||
                 error.message ||
                 'Something went wrong';

@@ -58,9 +58,9 @@ const Login: React.FC = () => {
                     <div className="visual-circle primary" />
                     <div className="visual-circle secondary" />
                     <div className="visual-text">
-                        <h2 className="text-gradient">Bring your creativity to life.</h2>
-                        <p>The ultimate platform for professional artists to manage their craft and grow their audience.</p>
-                    </div>
+                        <h2 className="text-gradient">Find Artists.<br />Book Instantly.</h2>
+                        <p className="visual-subtext">Discover top talent or showcase your skills to the right audience.</p>
+                    </div>    
                 </motion.div>
             </div>
 
