@@ -1118,3 +1118,26 @@
   justify-content: flex-end;
   gap: 8px;
 }
+
+.item-card-provider,
+.service-provider {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+.detail-compact {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.detail-chip {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.05);
+  padding: 6px 10px;
+  border-radius: 999px;
+}

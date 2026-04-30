@@ -363,3 +363,49 @@
         transform: rotate(360deg);
     }
 }
+
+.status-completed {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+.status-pending {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.status-cancelled {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.artist-info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.artist-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #9400D3, #ED80E9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.artist-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.artist-meta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}

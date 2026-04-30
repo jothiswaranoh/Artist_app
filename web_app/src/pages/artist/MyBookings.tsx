@@ -79,6 +79,21 @@ const MyBookingsPage: React.FC = () => {
     deleteBooking(bookingId);
   };
 
+  const formatTime = (time: string) => {
+    if (!time) return "—";
+
+    const [hour, minute] = time.split(":").map(Number);
+
+    const date = new Date();
+    date.setHours(hour, minute);
+
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="page-loading">
@@ -233,38 +248,42 @@ const MyBookingsPage: React.FC = () => {
                 <div className="item-card-header">
                   <div>
                     <p className="item-card-title">
-                      Booking #{String(booking.id).slice(0, 8)}
+                      {booking.service?.name || "Service Booking"}
                     </p>
+
                     <p className="item-card-subtitle">
+                      {isArtist
+                        ? `Customer: ${booking.customer?.name || booking.customer?.email || "Unknown"}`
+                        : `Artist: ${booking.artist?.name || booking.artist?.email || "Unknown"}`}
+                    </p>
+
+                    <p className="item-card-meta">
                       {new Date(booking.booking_date).toLocaleDateString(
                         "en-US",
                         {
                           weekday: "short",
                           month: "short",
                           day: "numeric",
-                          year: "numeric",
                         },
                       )}
                     </p>
                   </div>
+
                   <span className={`badge ${booking.status}`}>
                     {booking.status}
                   </span>
                 </div>
 
-                <div className="detail-rows">
-                  <div className="detail-item">
-                    <span className="dlabel">Time</span>
-                    <span className="dvalue">
-                      {booking.start_time || "—"} → {booking.end_time || "—"}
-                    </span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="dlabel">Amount</span>
-                    <span className="dvalue">₹{booking.total_amount || 0}</span>
-                  </div>
-                </div>
+                <div className="detail-compact">
+                  <span className="detail-chip">
+                    ⏰ {formatTime(booking.start_time)} →{" "}
+                    {formatTime(booking.end_time)}
+                  </span>
 
+                  <span className="detail-chip">
+                     ₹{booking.total_amount}
+                  </span>
+                </div>
                 <div className="item-card-footer">
                   <span className="meta-item">
                     <Calendar size={11} />
@@ -349,7 +368,8 @@ const MyBookingsPage: React.FC = () => {
             <table className="bookings-table">
               <thead>
                 <tr>
-                  <th>Booking</th>
+                  <th>Service</th>
+                  <th>{isArtist ? "Customer" : "Artist"}</th>
                   <th>Date</th>
                   <th>Time</th>
                   <th>Status</th>
@@ -361,23 +381,30 @@ const MyBookingsPage: React.FC = () => {
               <tbody>
                 {filtered.map((booking) => (
                   <tr key={booking.id} className="booking-row">
+                    {/* SERVICE */}
                     <td>
                       <div className="booking-cell-main">
                         <p className="booking-name">
-                          #{String(booking.id).slice(0, 8)}
+                          {booking.service?.name || "Service"}
                         </p>
                         <p className="booking-sub">
-                          {new Date(booking.created_at).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              day: "numeric",
-                            },
-                          )}
+                          {booking.service?.duration_minutes || 0} min
                         </p>
                       </div>
                     </td>
 
+                    {/* PERSON */}
+                    <td>
+                      {isArtist
+                        ? booking.customer?.name ||
+                          booking.customer?.email ||
+                          "Unknown"
+                        : booking.artist?.name ||
+                          booking.artist?.email ||
+                          "Unknown"}
+                    </td>
+
+                    {/* DATE */}
                     <td>
                       {new Date(booking.booking_date).toLocaleDateString(
                         "en-US",
@@ -389,18 +416,23 @@ const MyBookingsPage: React.FC = () => {
                       )}
                     </td>
 
+                    {/* TIME */}
                     <td>
-                      {booking.start_time || "—"} → {booking.end_time || "—"}
+                      {formatTime(booking.start_time)} →{" "}
+                      {formatTime(booking.end_time)}
                     </td>
 
+                    {/* STATUS */}
                     <td>
                       <span className={`badge ${booking.status}`}>
                         {booking.status}
                       </span>
                     </td>
 
+                    {/* AMOUNT */}
                     <td>₹{booking.total_amount || 0}</td>
 
+                    {/* ACTIONS */}
                     <td>
                       <div className="booking-actions">
                         {isArtist && booking.status === "pending" && (
@@ -423,7 +455,7 @@ const MyBookingsPage: React.FC = () => {
                           </button>
                         )}
 
-                        {isArtist &&
+                        {(isArtist || isCustomer) &&
                           (booking.status === "pending" ||
                             booking.status === "confirmed") && (
                             <button
@@ -434,16 +466,6 @@ const MyBookingsPage: React.FC = () => {
                               <XCircle size={14} />
                             </button>
                           )}
-
-                        {isCustomer && booking.status === "pending" && (
-                          <button
-                            onClick={() =>
-                              handleStatusChange(booking.id, "cancelled")
-                            }
-                          >
-                            <XCircle size={14} />
-                          </button>
-                        )}
 
                         {isCustomer && (
                           <button onClick={() => handleDelete(booking.id)}>

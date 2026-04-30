@@ -380,6 +380,25 @@ const MyServicesPage: React.FC = () => {
                 <div className="item-card-header">
                   <div>
                     <p className="item-card-title">{service.name}</p>
+
+                    <div className="artist-info-row">
+                      <div className="artist-avatar">
+                        {(myProfile?.name ||
+                          currentUser?.email ||
+                          "A")[0].toUpperCase()}
+                      </div>
+
+                      <div>
+                        <p className="artist-name">
+                          {myProfile?.name || currentUser?.email || "You"}
+                        </p>
+                        <p className="artist-meta">
+                          {myProfile?.city || "Unknown city"} •{" "}
+                          {myProfile?.experience_years || 0} yrs exp
+                        </p>
+                      </div>
+                    </div>
+
                     <p className="item-card-subtitle">
                       {service.description || "No description"}
                     </p>
@@ -432,9 +451,14 @@ const MyServicesPage: React.FC = () => {
                   <tr key={service.id} className="service-row">
                     <td>
                       <div className="service-cell-main">
-                        <p className="service-name">{service.name}</p>
+                        <p className="service-name">
+                          {service.name.replace(/#\d+-\d+$/, "").trim()}
+                        </p>
                         <p className="service-sub">
                           {service.description || "No description"}
+                        </p>
+                        <p className="service-provider">
+                          By {myProfile?.name || currentUser?.email || "You"}
                         </p>
                       </div>
                     </td>
