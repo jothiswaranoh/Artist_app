@@ -15,6 +15,7 @@ export interface User {
     artist_profile_attributes?: {
         city?: string;
         bio?: string;
+        is_approved?: boolean;
     };
 }
 

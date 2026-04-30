@@ -24,8 +24,13 @@ import "./ArtistPages.css";
 import { LayoutGrid, List } from "lucide-react";
 
 const MyServicesPage: React.FC = () => {
+ 
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 10;
+
   const {
     serviceOfferings,
+    meta,
     isLoading,
     error,
     createServiceOffering,
@@ -34,13 +39,13 @@ const MyServicesPage: React.FC = () => {
     isCreating,
     isUpdating,
     isDeleting,
-  } = useServiceOfferings();
+  } = useServiceOfferings(page, PER_PAGE);
 
   const {
     artistProfiles,
     updateArtistProfile,
     isUpdating: isProfileUpdating,
-  } = useArtistProfiles();
+  } = useArtistProfiles(1, 10);
   const { showToast } = useToast();
   const currentUser = AuthService.getCurrentUser();
   const myProfile = artistProfiles.find(
@@ -100,6 +105,9 @@ const MyServicesPage: React.FC = () => {
     setFormData({ name: "", description: "", price: "", duration_minutes: "" });
     setShowModal(true);
   };
+  useEffect(() => {
+  setPage(1);
+}, [searchQuery]);
 
   const openEditModal = (s: ServiceOffering) => {
     setEditingService(s);
@@ -298,7 +306,7 @@ const MyServicesPage: React.FC = () => {
           </div>
           <div>
             <p className="stat-label">Total Services</p>
-            <p className="stat-value">{serviceOfferings.length}</p>
+            <p className="stat-value">{meta?.total_count || 0}</p>
           </div>
         </motion.div>
         <motion.div className="stat-card" whileHover={{ y: -2 }}>
@@ -383,14 +391,12 @@ const MyServicesPage: React.FC = () => {
 
                     <div className="artist-info-row">
                       <div className="artist-avatar">
-                        {(myProfile?.name ||
-                          currentUser?.email ||
-                          "A")[0].toUpperCase()}
+                        {(service.artist_profile?.name || service.artist_profile?.email || "A")[0].toUpperCase()}
                       </div>
 
                       <div>
                         <p className="artist-name">
-                          {myProfile?.name || currentUser?.email || "You"}
+                          {service.artist_profile?.name || service.artist_profile?.email || "Unknown"}
                         </p>
                         <p className="artist-meta">
                           {myProfile?.city || "Unknown city"} •{" "}
@@ -447,18 +453,18 @@ const MyServicesPage: React.FC = () => {
               </thead>
 
               <tbody>
-                {filtered.map((service, i) => (
+                {filtered.map((service: ServiceOffering) => (
                   <tr key={service.id} className="service-row">
                     <td>
                       <div className="service-cell-main">
                         <p className="service-name">
-                          {service.name.replace(/#\d+-\d+$/, "").trim()}
+                          {(service.name || "").replace(/#\d+-\d+$/, "").trim()}
                         </p>
                         <p className="service-sub">
                           {service.description || "No description"}
                         </p>
                         <p className="service-provider">
-                          By {myProfile?.name || currentUser?.email || "You"}
+                          By {service.artist_profile?.name || service.artist_profile?.email || "Unknown"}
                         </p>
                       </div>
                     </td>
@@ -468,11 +474,13 @@ const MyServicesPage: React.FC = () => {
                         ₹{Number(service.price ?? 0)}
                       </span>
                     </td>
+
                     <td>
                       <span className="duration-tag">
                         <Clock size={12} /> {service.duration_minutes || 0} min
                       </span>
                     </td>
+
                     <td>
                       <div className="service-actions">
                         <button
@@ -497,13 +505,45 @@ const MyServicesPage: React.FC = () => {
           </div>
         )}
 
-        {filtered.length > 0 && (
-          <div className="list-footer">
-            Showing <strong>{filtered.length}</strong> of{" "}
-            <strong>{serviceOfferings.length}</strong> services
-          </div>
-        )}
+       {meta && (
+ <div className="pagination-footer">
+  <span>
+    Page {meta?.current_page} of {meta?.total_pages} — {meta?.total_count} total services
+  </span>
+
+  <div className="pagination">
+    <button
+      disabled={!meta?.prev_page}
+      onClick={() => setPage(page - 1)}
+    >
+      ‹
+    </button>
+
+    {Array.from({ length: meta?.total_pages || 0 }, (_, i) => (
+      <button
+        key={i}
+        className={meta?.current_page === i + 1 ? "active" : ""}
+        onClick={() => setPage(i + 1)}
+      >
+        {i + 1}
+      </button>
+    ))}
+
+    <button
+      disabled={!meta?.next_page}
+      onClick={() => setPage(page + 1)}
+    >
+      ›
+    </button>
+  </div>
+</div>
+  
+)}
+       
       </div>
+
+
+       
 
       {/* Add/Edit Modal */}
       <AnimatePresence>
