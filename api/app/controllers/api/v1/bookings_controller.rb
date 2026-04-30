@@ -143,7 +143,7 @@ end
           scoped = scoped.where(status: params[:status])
         end
         
-        scoped.order(booking_date: :desc, created_at: :desc)
+        scoped.order(created_at: :desc)
       end
     end
   end

@@ -13,6 +13,25 @@ export interface Booking {
     total_amount: number;
     created_at: string;
     updated_at: string;
+
+    service?: {
+        id: string;
+        name: string;
+        price: number;
+        duration_minutes: number;
+    };
+
+    customer?: {
+        id: string;
+        name: string | null;
+        email: string;
+    };
+
+    artist?: {
+        id: string;
+        name: string | null;
+        email: string;
+    };
 }
 
 export const BookingService = {

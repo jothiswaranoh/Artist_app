@@ -21,6 +21,7 @@ import { useResource } from '../hooks/useResource';
 import { AuthService } from '../services/AuthService';
 import './Dashboard.css';
 import { motion } from 'framer-motion';
+import { useBookings } from '../hooks/useBookings';
 
 const Dashboard: React.FC = () => {
     const navigate = useNavigate();
@@ -29,6 +30,11 @@ const Dashboard: React.FC = () => {
     const user = AuthService.getCurrentUser();
     const role = user?.role || 'customer';
     const displayName = user?.name || user?.email?.split('@')[0] || 'there';
+    const { bookings = [], isLoading: bookingsLoading } = useBookings();
+   
+    const recentBookings = [...bookings]
+  .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+  .slice(0, 3);
 
     // Stat cards per role
     const adminStatCards = [
@@ -87,124 +93,179 @@ const Dashboard: React.FC = () => {
             </div>
         );
     }
+    console.log(bookings);
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="dashboard"
-        >
-            {/* Greeting */}
-            <div className="dashboard-greeting">
-                <div>
-                    <h1>Good {getTimeOfDay()}, <span className="greeting-name">{displayName}</span></h1>
-                    <p className="greeting-sub">Here's what's happening on your dashboard today.</p>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="dashboard"
+      >
+        {/* Greeting */}
+        <div className="dashboard-greeting">
+          <div>
+            <h1>
+              Good {getTimeOfDay()},{" "}
+              <span className="greeting-name">{displayName}</span>
+            </h1>
+            <p className="greeting-sub">
+              Here's what's happening on your dashboard today.
+            </p>
+          </div>
+        </div>
+
+        {/* Stat cards */}
+        <div className="stats-grid">
+          {statCards.map((stat, index) => (
+            <motion.div
+              key={index}
+              className="stat-card glass"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.07 }}
+              whileHover={{ y: -4 }}
+            >
+              <div
+                className="stat-icon"
+                style={{ backgroundColor: stat.bg, color: stat.color }}
+              >
+                {stat.icon}
+              </div>
+              <div className="stat-content">
+                <p className="stat-label">{stat.label}</p>
+                <h3 className="stat-value" style={{ color: stat.color }}>
+                  {stat.value}
+                </h3>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Bottom grid */}
+        <div className="dashboard-grid">
+          {/* Recent Bookings */}
+          <div className="recent-section glass">
+            <div className="section-header">
+              <div className="section-title-group">
+                <div
+                  className="section-icon-pill"
+                  style={{
+                    background: "rgba(148,0,211,0.12)",
+                    color: "#ED80E9",
+                  }}
+                >
+                  <CalendarCheck size={15} />
                 </div>
+                <h3>
+                  {role === "admin"
+                    ? "Recent Bookings"
+                    : "Upcoming Appointments"}
+                </h3>
+              </div>
+              <button
+                className="view-all"
+                onClick={() => navigate(bookingsPath)}
+              >
+                View All <ChevronRight size={14} />
+              </button>
             </div>
 
-            {/* Stat cards */}
-            <div className="stats-grid">
-                {statCards.map((stat, index) => (
-                    <motion.div
-                        key={index}
-                        className="stat-card glass"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.07 }}
-                        whileHover={{ y: -4 }}
+            <div className="recent-list">
+              {recentBookings.map((b: any, i: number) => (
+                <motion.div
+                  key={b.id}
+                  className="recent-item"
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.06 }}
+                  whileHover={{ x: 4 }}
+                >
+                  <div
+                    className="item-avatar"
+                    style={{
+                      background: `linear-gradient(135deg, ${avatarColors[i]}, ${avatarColors[i + 1]}`,
+                    }}
+                  >
+                    {(b.customer?.name ||
+                      b.customer?.email ||
+                      "U")[0].toUpperCase()}
+                  </div>
+
+                  <div className="item-info">
+                    <p className="item-name">
+                      {b.customer?.name || b.customer?.email || "Unknown User"}
+                    </p>
+                    <p className="item-sub">
+                      {b.service?.name || "Unknown Service"} • ₹{b.total_amount}{" "}
+                      • {b.artist?.email}
+                    </p>
+                  </div>
+
+                  <div className="item-meta">
+                    <p className="item-time">
+                      <Clock size={11} /> {b.booking_date} • {b.start_time} -{" "}
+                      {b.end_time}
+                    </p>
+                    <span
+                      className={`status-badge ${getStatusClass(b.status)}`}
                     >
-                        <div className="stat-icon" style={{ backgroundColor: stat.bg, color: stat.color }}>
-                            {stat.icon}
-                        </div>
-                        <div className="stat-content">
-                            <p className="stat-label">{stat.label}</p>
-                            <h3 className="stat-value" style={{ color: stat.color }}>{stat.value}</h3>
-                        </div>
-                    </motion.div>
-                ))}
+                      {b.status}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
             </div>
+          </div>
 
-            {/* Bottom grid */}
-            <div className="dashboard-grid">
-                {/* Recent Bookings */}
-                <div className="recent-section glass">
-                    <div className="section-header">
-                        <div className="section-title-group">
-                            <div className="section-icon-pill" style={{ background: 'rgba(148,0,211,0.12)', color: '#ED80E9' }}>
-                                <CalendarCheck size={15} />
-                            </div>
-                            <h3>{role === 'admin' ? 'Recent Bookings' : 'Upcoming Appointments'}</h3>
-                        </div>
-                        <button className="view-all" onClick={() => navigate(bookingsPath)}>
-                            View All <ChevronRight size={14} />
-                        </button>
-                    </div>
-
-                    <div className="recent-list">
-                        {[0, 1, 2].map((i) => (
-                            <motion.div
-                                key={i}
-                                className="recent-item"
-                                initial={{ opacity: 0, x: -8 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.1 + i * 0.06 }}
-                                whileHover={{ x: 4 }}
-                            >
-                                <div
-                                    className="item-avatar"
-                                    style={{ background: `linear-gradient(135deg, ${avatarColors[i]}, ${avatarColors[i + 1]})` }}
-                                >
-                                    {role === 'artist' ? 'CL' : 'JD'}
-                                </div>
-                                <div className="item-info">
-                                    <p className="item-name">{role === 'artist' ? 'Client Name' : 'John Doe'}</p>
-                                    <p className="item-sub">{role === 'artist' ? 'Bridal Makeup Session' : 'Digital Portrait Session'}</p>
-                                </div>
-                                <div className="item-meta">
-                                    <p className="item-time"><Clock size={11} /> 2 hours ago</p>
-                                    <span className="status-badge pending">Pending</span>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
+          {/* Quick Actions */}
+          <div className="performance-section glass">
+            <div className="section-header">
+              <div className="section-title-group">
+                <div
+                  className="section-icon-pill"
+                  style={{
+                    background: "rgba(148,0,211,0.12)",
+                    color: "#ED80E9",
+                  }}
+                >
+                  <Sparkles size={15} />
                 </div>
-
-                {/* Quick Actions */}
-                <div className="performance-section glass">
-                    <div className="section-header">
-                        <div className="section-title-group">
-                            <div className="section-icon-pill" style={{ background: 'rgba(148,0,211,0.12)', color: '#ED80E9' }}>
-                                <Sparkles size={15} />
-                            </div>
-                            <h3>Quick Actions</h3>
-                        </div>
-                    </div>
-                    <div className="actions-grid">
-                        {quickActions.map((action, i) => (
-                            <motion.button
-                                key={i}
-                                className="action-card"
-                                onClick={() => navigate(action.path)}
-                                initial={{ opacity: 0, x: 8 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.1 + i * 0.06 }}
-                                whileHover={{ x: 4 }}
-                            >
-                                <div className="action-icon" style={{ background: action.bg, color: action.color }}>
-                                    {action.icon}
-                                </div>
-                                <div className="action-text">
-                                    <span className="action-title">{action.title}</span>
-                                    <p className="action-desc">{action.desc}</p>
-                                </div>
-                                <ChevronRight size={14} className="action-arrow" style={{ color: action.color }} />
-                            </motion.button>
-                        ))}
-                    </div>
-                </div>
+                <h3>Quick Actions</h3>
+              </div>
             </div>
-        </motion.div>
+            <div className="actions-grid">
+              {quickActions.map((action, i) => (
+                <motion.button
+                  key={i}
+                  className="action-card"
+                  onClick={() => navigate(action.path)}
+                  initial={{ opacity: 0, x: 8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.06 }}
+                  whileHover={{ x: 4 }}
+                >
+                  <div
+                    className="action-icon"
+                    style={{ background: action.bg, color: action.color }}
+                  >
+                    {action.icon}
+                  </div>
+                  <div className="action-text">
+                    <span className="action-title">{action.title}</span>
+                    <p className="action-desc">{action.desc}</p>
+                  </div>
+                  <ChevronRight
+                    size={14}
+                    className="action-arrow"
+                    style={{ color: action.color }}
+                  />
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.div>
     );
 };
 
@@ -213,6 +274,24 @@ function getTimeOfDay() {
     if (h < 12) return 'morning';
     if (h < 17) return 'afternoon';
     return 'evening';
+}
+
+function formatTimeAgo(dateString: string) {
+    const diff = Date.now() - new Date(dateString).getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    if (hours < 1) return 'Just now';
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+}
+
+function getStatusClass(status: string) {
+    switch (status) {
+        case 'completed': return 'status-completed';
+        case 'pending': return 'status-pending';
+        case 'cancelled': return 'status-cancelled';
+        default: return '';
+    }
 }
 
 export default Dashboard;
