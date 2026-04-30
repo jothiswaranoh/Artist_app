@@ -3,24 +3,20 @@ import { apiService } from './api';
 export interface ArtistProfile {
     id: string;
     user_id: string;
-    name: string;
-    bio: string;
-    base_price: number;
-    city: string;
+
+    name: string | null;
+    email: string;
+
+    bio: string | null;
+    base_price: number | string;
+    city: string | null;
     experience_years: number;
     is_approved?: boolean;
+    services_count?: number;
+    bookings_count?: number;
+    reviews_count?: number;
     created_at: string;
     updated_at: string;
-    user?: {
-        id: string;
-        email: string;
-        role: string;
-        name?: string;
-        phone?: string;
-        address?: string;
-        preferences?: string;
-        loyalty_status?: string;
-    };
     services?: any[];
     bookings?: any[];
     reviews?: any[];

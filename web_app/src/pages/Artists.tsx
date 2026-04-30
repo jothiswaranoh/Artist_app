@@ -10,9 +10,9 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import './Artists.css';
 import AddUserModal from '../components/admin/AddUserModal';
-import EditUserModal from '../components/admin/EditUserModal';
 import ConfirmDeleteModal from '../components/common/ConfirmDeleteModal';
 import { LayoutGrid, List } from 'lucide-react';
+import ArtistEditModal from '../components/admin/ArtistEditModal';
 
 const ArtistsPage: React.FC = () => {
     const {
@@ -26,11 +26,11 @@ const ArtistsPage: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedArtist, setSelectedArtist] = useState<ArtistProfile | null>(null);
     const [isAddModalOpen, setAddModalOpen] = useState(false);
-    const [isEditModalOpen, setisEditModalOpen] = useState(false);
-    const [selectedEditUser, setSelectedEditUser] = useState<User | null>(null);
     const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
     const [view, setView] = useState<'grid' | 'list'>('grid');
-    
+    const [isArtistEditOpen, setIsArtistEditOpen] = useState(false);
+    const [editingArtist, setEditingArtist] = useState<ArtistProfile | null>(null);
+
     const filteredArtists = useMemo(() => {
         return artistProfiles.filter((a: ArtistProfile) => {
             const query = searchQuery.toLowerCase();
@@ -38,14 +38,14 @@ const ArtistsPage: React.FC = () => {
                 (a.bio || '').toLowerCase().includes(query) ||
                 (a.city || '').toLowerCase().includes(query) ||
                 String(a.user_id).toLowerCase().includes(query) ||
-                (a.user?.email || '').toLowerCase().includes(query);
+                (a.email || '').toLowerCase().includes(query);
         });
     }, [artistProfiles, searchQuery]);
 
     const stats = useMemo(() => ({
         total: artistProfiles.length,
         avgPrice: artistProfiles.length > 0
-            ? Math.round(artistProfiles.reduce((sum: number, a: ArtistProfile) => sum + (a.base_price || 0), 0) / artistProfiles.length)
+            ? Math.round(artistProfiles.reduce((sum: number, a: ArtistProfile) => sum + Number(a.base_price || 0), 0) / artistProfiles.length)
             : 0,
     }), [artistProfiles]);
 
@@ -53,7 +53,7 @@ const ArtistsPage: React.FC = () => {
     const getAvatarGradient = (id: string) => avatarGradients[String(id).charCodeAt(0) % avatarGradients.length];
 
     const getInitial = (artist: ArtistProfile) => {
-        if (artist.user?.email) return artist.user.email.charAt(0).toUpperCase();
+        if (artist.email) return artist.email.charAt(0).toUpperCase();
         return 'A';
     };
 
@@ -62,13 +62,9 @@ const ArtistsPage: React.FC = () => {
     };
 
     const handleEditArtist = (artist: ArtistProfile) => {
-        if (artist.user) {
-            setSelectedEditUser(artist.user);
-            setisEditModalOpen(true);
-        } else {
-            alert("No user data for this artist");
-        }
-    };
+      setEditingArtist(artist);
+      setIsArtistEditOpen(true);
+    };  
 
     if (isLoading) {
         return (
@@ -208,8 +204,7 @@ const ArtistsPage: React.FC = () => {
                     <div className="artist-card-info">
                       <p className="artist-email">
                         {artist.name ||
-                          artist.user?.name ||
-                          artist.user?.email ||
+                          artist.email ||
                           `Artist #${String(artist.id).slice(0, 8)}`}
                       </p>
                       <p className="artist-city">
@@ -307,11 +302,10 @@ const ArtistsPage: React.FC = () => {
                           <div className="artist-name-block">
                             <p className="artist-name">
                               {artist.name ||
-                                artist.user?.name ||
                                 `Artist #${String(artist.id).slice(0, 8)}`}
                             </p>
                             <p className="artist-sub">
-                              {artist.user?.email || "No email"}
+                              {artist.email || "No email"}
                             </p>
                           </div>
                         </div>
@@ -403,8 +397,7 @@ const ArtistsPage: React.FC = () => {
                     <div>
                       <p className="artist-modal-name">
                         {selectedArtist.name ||
-                          selectedArtist.user?.name ||
-                          selectedArtist.user?.email ||
+                          selectedArtist.email ||
                           `Artist #${String(selectedArtist.id).slice(0, 8)}`}
                       </p>
                       <p className="artist-modal-id">
@@ -434,7 +427,7 @@ const ArtistsPage: React.FC = () => {
                         💰 Base Price
                       </span>
                       <span className="artist-modal-info-value pink">
-                        ${selectedArtist.base_price || 0}
+                        ₹{Number(selectedArtist.base_price || 0).toFixed(2)}
                       </span>
                     </div>
                     <div className="artist-modal-info-item">
@@ -494,7 +487,7 @@ const ArtistsPage: React.FC = () => {
                                 </p>
                               </div>
                               <span className="artist-service-price">
-                                ${service.price}
+                                ₹{Number(service.price || 0).toFixed(2)}
                               </span>
                             </div>
                             {service.description && (
@@ -515,12 +508,16 @@ const ArtistsPage: React.FC = () => {
         {isAddModalOpen && (
           <AddUserModal role="artist" onClose={() => setAddModalOpen(false)} />
         )}
-
-        {isEditModalOpen && selectedEditUser && (
-          <EditUserModal
-            user={selectedEditUser}
-            onClose={() => setisEditModalOpen(false)}
-          />
+        
+        {isArtistEditOpen && editingArtist && (
+         <ArtistEditModal
+            artist={editingArtist}
+            onClose={() => {
+              setIsArtistEditOpen(false);
+              setEditingArtist(null);
+            }}
+            onSuccess={() => window.location.reload()}
+         />
         )}
 
         {deleteTargetId && (

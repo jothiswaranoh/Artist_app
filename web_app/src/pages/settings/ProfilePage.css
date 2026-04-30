@@ -1,0 +1,93 @@
+.profile-page {
+  padding: 32px;
+  color: #e5e7eb;
+}
+
+/* Title */
+.profile-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+/* Card */
+.profile-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 520px;
+  backdrop-filter: blur(10px);
+}
+
+/* Rows */
+.profile-row {
+  margin-bottom: 18px;
+}
+
+.profile-label {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.profile-value {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Inputs */
+.profile-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  outline: none;
+}
+
+.profile-input:focus {
+  border-color: #a855f7;
+}
+
+/* Actions */
+.profile-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #9333ea, #7c3aed);
+  color: white;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.profile-error {
+  color: #f87171;
+  margin-top: 10px;
+  font-size: 13px;
+}

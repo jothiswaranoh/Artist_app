@@ -19,11 +19,9 @@ module Api
 
         artists = artists.order(created_at: :desc)
 
-        paginated_artists = paginate(artists)
-        
-        render_success(
-          data: paginated_artists,
-          message: "Artists retrieved successfully"
+        render_paginated_success(
+           artists,
+           message: "Artists retrieved successfully"
         )
       end
 

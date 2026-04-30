@@ -17,6 +17,8 @@ import { AuthService } from './services/AuthService';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from './components/common/Toast';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import ProfilePage from './pages/settings/ProfilePage';
+import PasswordPage from './pages/settings/PasswordPage';
 
 const queryClient = new QueryClient();
 
@@ -82,6 +84,8 @@ function App() {
 
               {/* Shared Pages */}
               <Route path="settings" element={<SettingsPage />} />
+              <Route path="/settings/profile" element={<ProfilePage />} />
+              <Route path="/settings/password" element={<PasswordPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

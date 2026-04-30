@@ -1,4 +1,4 @@
-import { apiService } from './api';
+import api, { apiService } from './api';
 import { TokenManager } from './TokenManager';
 
 export const AuthService = {
@@ -26,6 +26,36 @@ export const AuthService = {
     logout: async () => {
         await TokenManager.clearToken();
         localStorage.removeItem('user');
+    },
+
+    getProfile: async () => {
+      const response = await api.get('/profile');
+  
+      if (response.data?.data) {
+        return response.data.data;
+      }
+      return response.data; 
+    },
+    
+    updateProfile: async (data: { name: string; email: string }) => {
+       const response = await api.patch('/profile', data);
+
+       if (response.data?.data) {
+         return response.data.data;
+       }
+       return response.data;
+    },
+
+    updatePassword: async (data: {
+      current_password: string;
+      new_password: string;
+      confirm_password: string;
+      }) => {
+      const response = await api.patch('/password/update', data);
+       if (response.data?.data) {
+        return response.data.data;
+       }
+      return response.data;
     },
 
     getCurrentUser: () => {

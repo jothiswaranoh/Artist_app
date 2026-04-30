@@ -166,7 +166,7 @@ const MyBookingsPage: React.FC = () => {
           </div>
           <div>
             <p className="stat-label">Revenue</p>
-            <p className="stat-value">${stats.totalRevenue}</p>
+            <p className="stat-value">₹{stats.totalRevenue}</p>
           </div>
         </motion.div>
       </div>
@@ -261,7 +261,7 @@ const MyBookingsPage: React.FC = () => {
                   </div>
                   <div className="detail-item">
                     <span className="dlabel">Amount</span>
-                    <span className="dvalue">${booking.total_amount || 0}</span>
+                    <span className="dvalue">₹{booking.total_amount || 0}</span>
                   </div>
                 </div>
 
