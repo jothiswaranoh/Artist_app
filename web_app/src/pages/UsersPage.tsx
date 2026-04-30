@@ -11,6 +11,7 @@ import UsersTable from '../components/users/UsersTable';
 import AddUserModal from '../components/admin/AddUserModal';
 import EditUserModal from '../components/admin/EditUserModal';
 import ConfirmDeleteModal from '../components/common/ConfirmDeleteModal';
+import { useEffect } from 'react';
 
 const PER_PAGE = 7;
 
@@ -22,6 +23,10 @@ const UsersPage: React.FC = () => {
     // 2. Filters & State
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('All Status');
+
+    useEffect(() => {
+      setPage(1);
+    }, [searchQuery, statusFilter]);
 
     // 3. Modals State
     const [isAddModalOpen, setAddModalOpen] = useState(false);

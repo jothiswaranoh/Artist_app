@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { useUsers } from '../../hooks/useUsers';
 import { X, UserPlus, Mail, Lock, User as UserIcon, Phone, MapPin, Eye, EyeOff } from 'lucide-react';
 import './UserDetailsModal.css';
+import { ArtistProfileService } from "../../services/ArtistProfileService";
 
 interface AddUserModalProps {
     role: 'admin' | 'customer' | 'artist';
     onClose: () => void;
+    onSuccess?: () => void;
 }
 
-const AddUserModal: React.FC<AddUserModalProps> = ({ role, onClose }) => {
+const AddUserModal: React.FC<AddUserModalProps> = ({ role, onClose, onSuccess    }) => {
     const { createUser, isCreating } = useUsers();
 
     const [name, setName] = useState('');
@@ -45,9 +47,10 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ role, onClose }) => {
                 password,
                 password_confirmation: passwordConfirmation,
                 role,
-                ...(role === 'artist' ? { artist_profile_attributes: { city, bio } } : {})
+                ...(role === 'artist' ? { artist_profile_attributes: { city, bio ,is_approved: true, } } : {})
             });
             onClose();
+            onSuccess?.();
         } catch (err: any) {
             setError(err.message || 'Failed to create user');
         }

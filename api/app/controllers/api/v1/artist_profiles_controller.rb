@@ -44,7 +44,7 @@ module Api
       private
 
       def artist_profile_params
-        params.require(:artist_profile).permit(:name, :bio, :experience_years, :base_price, :city)
+        params.require(:artist_profile).permit(:name, :bio, :experience_years, :base_price, :city ,:is_approved )
       end
 
       def resource_params

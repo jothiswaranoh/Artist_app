@@ -24,7 +24,7 @@ module Api
 
       def user_params
         permitted_params = [:email, :password, :password_confirmation, :name, :phone, :address, :loyalty_status, :preferences, 
-                            artist_profile_attributes: [:id, :city, :bio]]
+                            artist_profile_attributes: [:id, :city, :bio ,:is_approved]]
         permitted_params += [:role, :status] if current_user&.admin?
         params.require(:user).permit(permitted_params)
       end

@@ -1141,3 +1141,49 @@
   padding: 6px 10px;
   border-radius: 999px;
 }
+
+.pagination-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 24px;
+  padding: 16px 20px 0 20px;   /* 👈 THIS FIXES ALIGNMENT */
+
+  border-top: 1px solid rgba(255,255,255,0.08);
+
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 4px;
+}
+
+.pagination button {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pagination button.active {
+  background: linear-gradient(135deg, #9333ea, #d946ef);
+  border: none;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: rgba(147, 51, 234, 0.2);
+}
+

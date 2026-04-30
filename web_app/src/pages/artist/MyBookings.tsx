@@ -13,6 +13,7 @@ import {
   XCircle,
   CalendarCheck,
   Trash2,
+  IndianRupee,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import "./ArtistPages.css";
@@ -177,7 +178,7 @@ const MyBookingsPage: React.FC = () => {
         </motion.div>
         <motion.div className="stat-card" whileHover={{ y: -2 }}>
           <div className="stat-icon purple">
-            <DollarSign size={18} />
+            <IndianRupee size={18} />
           </div>
           <div>
             <p className="stat-label">Revenue</p>

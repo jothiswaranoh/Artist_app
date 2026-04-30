@@ -2,27 +2,32 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ServiceOfferingService, type ServiceOffering } from '../services/ServiceOfferingService';
 import { useToast } from '../components/common/Toast';
 
-export const useServiceOfferings = () => {
+export const useServiceOfferings = (page: number, perPage: number) => {
     const queryClient = useQueryClient();
     const { showToast } = useToast();
 
-    const {
-        data: serviceOfferings = [],
-        isLoading,
-        error,
-        refetch
-    } = useQuery({
-        queryKey: ['services'],
-        queryFn: async () => {
-            const data: any = await ServiceOfferingService.getAll();
-            return (Array.isArray(data) ? data : data?.data || data?.service_offerings || []) as ServiceOffering[];
-        }
+    const { data, isLoading, error, refetch } = useQuery({
+      queryKey: ["services", page, perPage],
+      queryFn: async () => {
+        const res: any = await ServiceOfferingService.getAll(page, perPage);
+        return {
+          data: res.data || [],
+          meta: res.meta || {},
+        };
+      },
     });
+
+    const serviceOfferings = data?.data || [];
+    const meta = data?.meta || {};
 
     const createMutation = useMutation({
         mutationFn: (data: Partial<ServiceOffering>) => ServiceOfferingService.create(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['services'] });
+            console.log("🔥 SERVICE CREATED - INVALIDATING");
+            queryClient.invalidateQueries({
+              queryKey: ["services"],
+              exact: false,
+            });
             showToast('Service created successfully', 'success');
         },
         onError: (err: any) => {
@@ -55,6 +60,7 @@ export const useServiceOfferings = () => {
 
     return {
         serviceOfferings,
+        meta,
         isLoading,
         error,
         refetch,

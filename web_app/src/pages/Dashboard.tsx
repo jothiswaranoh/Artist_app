@@ -16,6 +16,7 @@ import {
     PlusCircle,
     Settings,
     Search,
+    IndianRupee,
 } from 'lucide-react';
 import { useResource } from '../hooks/useResource';
 import { AuthService } from '../services/AuthService';
@@ -41,19 +42,19 @@ const Dashboard: React.FC = () => {
         { label: 'Total Artists', value: stats?.total_artists ?? 0, icon: <Users />, color: '#9400D3', bg: 'rgba(148,0,211,0.12)' },
         { label: 'Total Bookings', value: stats?.total_bookings ?? 0, icon: <CalendarCheck />, color: '#ED80E9', bg: 'rgba(237,128,233,0.12)' },
         { label: 'Active Services', value: stats?.total_services ?? 0, icon: <Handshake />, color: '#a78bfa', bg: 'rgba(167,139,250,0.12)' },
-        { label: 'Revenue', value: `$${stats?.total_payments ?? stats?.total_revenue ?? 0}`, icon: <TrendingUp />, color: '#34d399', bg: 'rgba(52,211,153,0.12)' },
+        { label: 'Revenue', value: `₹${stats?.total_payments ?? stats?.total_revenue ?? 0}`, icon: <TrendingUp />, color: '#34d399', bg: 'rgba(52,211,153,0.12)' },
     ];
 
     const artistStatCards = [
         { label: 'My Bookings', value: stats?.total_bookings ?? 0, icon: <CalendarCheck />, color: '#9400D3', bg: 'rgba(148,0,211,0.12)' },
         { label: 'My Services', value: stats?.total_services ?? 0, icon: <Layers />, color: '#ED80E9', bg: 'rgba(237,128,233,0.12)' },
-        { label: 'Revenue', value: `$${stats?.total_revenue ?? 0}`, icon: <DollarSign />, color: '#34d399', bg: 'rgba(52,211,153,0.12)' },
+        { label: 'Revenue', value: `₹${stats?.total_revenue ?? 0}`, icon: <IndianRupee />, color: '#34d399', bg: 'rgba(52,211,153,0.12)' },
         { label: 'Reviews', value: stats?.total_reviews ?? 0, icon: <Star />, color: '#fbbf24', bg: 'rgba(251,191,36,0.12)' },
     ];
 
     const customerStatCards = [
         { label: 'My Bookings', value: stats?.total_bookings ?? 0, icon: <CalendarCheck />, color: '#9400D3', bg: 'rgba(148,0,211,0.12)' },
-        { label: 'Total Spent', value: `$${stats?.total_spent ?? 0}`, icon: <DollarSign />, color: '#34d399', bg: 'rgba(52,211,153,0.12)' },
+        { label: 'Total Spent', value: `₹${stats?.total_spent ?? 0}`, icon: <IndianRupee />, color: '#34d399', bg: 'rgba(52,211,153,0.12)' },
     ];
 
     const statCards = role === 'admin' ? adminStatCards : role === 'artist' ? artistStatCards : customerStatCards;

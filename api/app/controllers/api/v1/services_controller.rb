@@ -14,6 +14,15 @@ module Api
             current_user.create_artist_profile(bio: '', city: '', experience_years: 0, base_price: 0, is_approved: false)
           end
           @resource.artist_profile_id = current_user.artist_profile.id
+        
+        elsif current_user.admin?
+          system_user = User.find_by(email: "system@artistapp.com")
+
+         unless system_user&.artist_profile
+           return render_error(message: "System artist not found")
+         end
+
+         @resource.artist_profile_id = system_user.artist_profile.id
         end
 
         authorize! :create, @resource
@@ -51,11 +60,13 @@ module Api
 
       def collection
         if current_user.admin?
-          Service.all.order(name: :asc)
+          Service.includes(:artist_profile, :service_category).order(name: :asc)
         elsif current_user.artist? && current_user.artist_profile
-          Service.where(artist_profile_id: current_user.artist_profile.id).order(name: :asc)
+          Service.where(artist_profile_id: current_user.artist_profile.id)
+                 .includes(:service_category)
+                 .order(name: :asc)
         else
-          Service.all.order(name: :asc)
+          Service.includes(:artist_profile, :service_category).order(name: :asc)
         end
       end
     end
