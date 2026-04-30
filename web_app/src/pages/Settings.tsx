@@ -17,7 +17,7 @@ const SettingsPage: React.FC = () => {
         {
             title: 'Account',
             items: [
-                { icon: <User size={16} />, label: 'Profile', description: 'Manage your profile details', action: () => {} },
+                { icon: <User size={16} />, label: 'Profile', description: 'Manage your profile details', action: () => navigate('/settings/profile') },
                 { icon: <Mail size={16} />, label: 'Email', description: user?.email || 'No email set', action: () => {} },
             ]
         },
@@ -31,7 +31,7 @@ const SettingsPage: React.FC = () => {
         {
             title: 'Security',
             items: [
-                { icon: <Shield size={16} />, label: 'Password', description: 'Change your password', action: () => {} },
+                { icon: <Shield size={16} />, label: 'Password', description: 'Change your password', action: () => navigate('/settings/password') },
             ]
         },
     ];
