@@ -29,9 +29,9 @@ module Api
          @booking.start_time
         ).exists?
 
-if conflict
-  return render_error(message: "This time slot is not available")
-end
+       if conflict
+         return render_error(message: "This time slot is not available")
+       end
 
         begin
         if @booking.save
@@ -45,10 +45,27 @@ end
       end
 
       def index
-        @bookings = paginate(collection)
-        render_paginated_success(@bookings, message: "Bookings retrieved successfully")
+        bookings = collection
+               .page(params[:page])
+               .per(params[:per_page] || 10)
+        render_paginated_success(bookings, message: "Bookings retrieved successfully")
       end
       
+      # GET /api/v1/bookings/stats
+      def stats
+        scoped = collection
+
+        stats = {
+          total: scoped.count,
+          pending: scoped.where(status: "pending").count,
+          confirmed: scoped.where(status: "confirmed").count,
+          completed: scoped.where(status: "completed").count,
+          revenue: scoped.where(status: "completed").sum(:total_amount)
+        }
+
+         render_success(data: stats, message: "Booking stats fetched")
+      end
+
       def show
         render_success(
           data: @booking,

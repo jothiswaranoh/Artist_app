@@ -33,6 +33,7 @@ Rails.application.routes.draw do
         collection do
           get :my_bookings
           get :artist_bookings
+          get :stats
         end
         member do
           patch :cancel

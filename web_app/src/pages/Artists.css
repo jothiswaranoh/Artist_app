@@ -1187,3 +1187,14 @@
   background: rgba(147, 51, 234, 0.2);
 }
 
+.content-card {
+  padding-bottom: 16px;
+}
+
+.pagination-footer {
+  margin-top: 24px;
+}
+
+.artists-table-card {
+  padding-bottom: 24px;
+}
