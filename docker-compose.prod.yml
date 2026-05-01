@@ -56,13 +56,29 @@ services:
       context: ./web_app
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: http://localhost:3001
+        VITE_API_URL: https://bookingapp.freedynamicdns.net
     container_name: artist_app_web_prod
     depends_on:
       api:
         condition: service_healthy
     ports:
       - "8080:80"
+    networks:
+      - artist_app_network
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: artist_app_nginx_prod
+    ports:
+      - "8001:80"
+    volumes:
+      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_started
     networks:
       - artist_app_network
     restart: unless-stopped

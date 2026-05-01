@@ -9,7 +9,6 @@ import {
     ChevronRight,
     Star,
     Layers,
-    DollarSign,
     Sparkles,
     CalendarDays,
     Eye,
@@ -31,7 +30,7 @@ const Dashboard: React.FC = () => {
     const user = AuthService.getCurrentUser();
     const role = user?.role || 'customer';
     const displayName = user?.name || user?.email?.split('@')[0] || 'there';
-    const { bookings = [], isLoading: bookingsLoading } = useBookings();
+    const { bookings = [] } = useBookings();
    
     const recentBookings = [...bookings]
   .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
@@ -277,14 +276,6 @@ function getTimeOfDay() {
     return 'evening';
 }
 
-function formatTimeAgo(dateString: string) {
-    const diff = Date.now() - new Date(dateString).getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    if (hours < 1) return 'Just now';
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    return `${days}d ago`;
-}
 
 function getStatusClass(status: string) {
     switch (status) {

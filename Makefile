@@ -24,9 +24,7 @@ dev-containers: stop-containers ## Build and start dev Docker containers
 	@echo "   Backend:  http://localhost:3000"
 
 prod-containers: stop-containers ## Build and start prod Docker containers
-	@echo "Starting AI Prompt Playground in Production Mode..."
-	docker-compose up --build
-	@echo "Application should be running at:"
-	@echo "   Frontend: http://localhost:3000"
-	@echo "   Backend:  http://localhost:8001"
+	@echo "Starting Artist App in Production Mode..."
+	docker-compose --env-file .env.prod -f docker-compose.prod.yml up --build -d
+	@echo "Application should be running at: https://bookingapp.freedynamicdns.net"
 

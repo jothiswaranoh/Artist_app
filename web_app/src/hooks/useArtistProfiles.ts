@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ArtistProfileService, type ArtistProfile } from '../services/ArtistProfileService';
 import { useToast } from '../components/common/Toast';
 
-export const useArtistProfiles = (page: number, perPage: number, search?: string) => {
+export const useArtistProfiles = (page: number = 1, perPage: number = 10, search?: string) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 

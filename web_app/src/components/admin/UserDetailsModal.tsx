@@ -109,7 +109,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({ user, onClose, onEd
                             </div>
                             <div className="detail-item">
                                 <span className="label"><Calendar size={12} /> Member Since</span>
-                                <span className="value">{new Date(user.created_at).toLocaleDateString()}</span>
+                                <span className="value">{new Date(user.created_at || '').toLocaleDateString()}</span>
                             </div>
                         </div>
                     </div>

@@ -91,7 +91,7 @@ const AdminsPage: React.FC = () => {
     const activeAdminsCount = meta?.active_count ?? adminUsers.filter((u: User) => u.status === 'active' || !u.status).length;
 
     const newAdminsCount = meta?.new_this_week_count ?? adminUsers.filter((u: User) => {
-        const createdDate = new Date(u.created_at);
+        const createdDate = new Date(u.created_at || '');
         const oneWeekAgo = new Date();
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
         return createdDate >= oneWeekAgo;
@@ -222,7 +222,7 @@ const AdminsPage: React.FC = () => {
                                         </div>
                                     </td>
                                     <td className="td-date">
-                                        {new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                        {new Date(user.created_at || '').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                     </td>
                                     <td>
                                         <div className="td-actions">
