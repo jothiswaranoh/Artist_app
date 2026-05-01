@@ -30,8 +30,8 @@ interface BookingForm {
 }
 
 const BrowseArtistsPage: React.FC = () => {
-    const { artistProfiles, isLoading, error } = useArtistProfiles();
-    const { createBooking, isCreating } = useBookings();
+    const { artistProfiles, isLoading, error } = useArtistProfiles(1, 10);
+    const { createBooking, isCreating } = useBookings(1);
     const { showToast } = useToast();
 
     const [searchQuery, setSearchQuery] = useState('');

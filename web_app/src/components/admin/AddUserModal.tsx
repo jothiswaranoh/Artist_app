@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useUsers } from '../../hooks/useUsers';
 import { X, UserPlus, Mail, Lock, User as UserIcon, Phone, MapPin, Eye, EyeOff } from 'lucide-react';
 import './UserDetailsModal.css';
-import { ArtistProfileService } from "../../services/ArtistProfileService";
+
 
 interface AddUserModalProps {
     role: 'admin' | 'customer' | 'artist';

@@ -49,7 +49,6 @@ const UsersPage: React.FC = () => {
 
   return (
     <div className="users-page">
-
       {/* Page Header */}
       <div className="users-header">
         <div className="users-header-left">
@@ -77,7 +76,6 @@ const UsersPage: React.FC = () => {
 
       {/* Main Table Card */}
       <div className="users-table-card">
-
         {/* Search Bar */}
         <div className="users-search-bar">
           <Search size={14} />
@@ -85,10 +83,13 @@ const UsersPage: React.FC = () => {
             type="text"
             placeholder="Search by email or role..."
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           {searchQuery && (
-            <button className="users-search-clear" onClick={() => setSearchQuery('')}>
+            <button
+              className="users-search-clear"
+              onClick={() => setSearchQuery("")}
+            >
               <X size={14} />
             </button>
           )}
@@ -109,7 +110,9 @@ const UsersPage: React.FC = () => {
               {filteredUsers.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="users-empty">
-                    {searchQuery ? `No users match "${searchQuery}"` : 'No users found'}
+                    {searchQuery
+                      ? `No users match "${searchQuery}"`
+                      : "No users found"}
                   </td>
                 </tr>
               ) : (
@@ -123,19 +126,25 @@ const UsersPage: React.FC = () => {
                     {/* User */}
                     <td>
                       <div className="user-info-cell">
-                        <div className={`user-avatar ${getAvatarClass(user.email)}`}>
+                        <div
+                          className={`user-avatar ${getAvatarClass(user.email)}`}
+                        >
                           {user.email.charAt(0).toUpperCase()}
                         </div>
                         <div>
                           <p className="user-email">{user.email}</p>
-                          <p className="user-id">#{String(user.id).slice(0, 8)}</p>
+                          <p className="user-id">
+                            #{String(user.id).slice(0, 8)}
+                          </p>
                         </div>
                       </div>
                     </td>
 
                     {/* Role */}
                     <td>
-                      <span className={`role-badge ${getRoleBadgeClass(user.role)}`}>
+                      <span
+                        className={`role-badge ${getRoleBadgeClass(user.role)}`}
+                      >
                         {user.role}
                       </span>
                     </td>
@@ -144,9 +153,16 @@ const UsersPage: React.FC = () => {
                     <td>
                       <div className="user-date-cell">
                         <Calendar size={13} />
-                        {new Date(user.created_at).toLocaleDateString('en-US', {
-                          month: 'short', day: 'numeric', year: 'numeric'
-                        })}
+                        {user.created_at
+                          ? new Date(user.created_at).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              },
+                            )
+                          : "-"}
                       </div>
                     </td>
 
@@ -181,7 +197,8 @@ const UsersPage: React.FC = () => {
         {/* Table Footer */}
         {filteredUsers.length > 0 && (
           <div className="users-table-footer">
-            Showing <strong>{filteredUsers.length}</strong> of <strong>{users.length}</strong> users
+            Showing <strong>{filteredUsers.length}</strong> of{" "}
+            <strong>{users.length}</strong> users
           </div>
         )}
       </div>
@@ -195,29 +212,35 @@ const UsersPage: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="modal-overlay"
-            onClick={e => e.target === e.currentTarget && setEditingUser(null)}
+            onClick={(e) =>
+              e.target === e.currentTarget && setEditingUser(null)
+            }
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.93, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.93, y: 20 }}
-              transition={{ type: 'spring', stiffness: 320, damping: 30 }}
+              transition={{ type: "spring", stiffness: 320, damping: 30 }}
               className="modal-card"
             >
               {/* Modal Header */}
               <div className="modal-header">
                 <h3>Edit User</h3>
-                <button className="modal-close" onClick={() => setEditingUser(null)}>
+                <button
+                  className="modal-close"
+                  onClick={() => setEditingUser(null)}
+                >
                   <X size={15} />
                 </button>
               </div>
 
               {/* Modal Body */}
               <div className="modal-body">
-
                 {/* Avatar Preview */}
                 <div className="modal-avatar-section">
-                  <div className={`modal-avatar ${getAvatarClass(editingUser.email)}`}>
+                  <div
+                    className={`modal-avatar ${getAvatarClass(editingUser.email)}`}
+                  >
                     {editingUser.email.charAt(0).toUpperCase()}
                   </div>
                   <p className="modal-user-id">ID: {editingUser.id}</p>
@@ -229,7 +252,9 @@ const UsersPage: React.FC = () => {
                   <input
                     type="email"
                     defaultValue={editingUser.email}
-                    onBlur={e => handleUpdateUser(editingUser, { email: e.target.value })}
+                    onBlur={(e) =>
+                      handleUpdateUser(editingUser, { email: e.target.value })
+                    }
                     disabled={isUpdating}
                   />
                 </div>
@@ -240,7 +265,9 @@ const UsersPage: React.FC = () => {
                   <div className="select-wrap">
                     <select
                       defaultValue={editingUser.role}
-                      onBlur={e => handleUpdateUser(editingUser, { role: e.target.value })}
+                      onBlur={(e) =>
+                        handleUpdateUser(editingUser, { role: e.target.value })
+                      }
                       disabled={isUpdating}
                     >
                       <option value="admin">Admin</option>

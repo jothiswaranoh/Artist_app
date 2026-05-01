@@ -6,7 +6,7 @@ export const useBookings = (page: number) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["bookings", page],
     queryFn: async () => {
       const res = await BookingService.getAll(page, 10);

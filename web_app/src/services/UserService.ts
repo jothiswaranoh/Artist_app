@@ -5,7 +5,7 @@ export interface User {
     email: string;
     role: string;
     status?: string;
-    created_at?: string;
+    created_at: string | null;
     name?: string;
     phone?: string;
     address?: string;
@@ -30,35 +30,71 @@ export interface PaginationMeta {
 }
 
 export const UserService = {
-    getAllUsers: async (page = 1, perPage = 10, role?: string): Promise<{ data: User[]; meta: PaginationMeta }> => {
-        const params: any = { page, per_page: perPage };
-        if (role) {
-            params.role = role;
-        }
-        const response = await apiService.get('/users', params);
-        return {
-            data: (response.data as User[]) ?? [],
-            meta: response.meta ?? { current_page: 1, next_page: null, prev_page: null, total_pages: 1, total_count: 0 }
-        };
-    },
+  getAllUsers: async (
+    page = 1,
+    perPage = 10,
+    role?: string,
+  ): Promise<{ data: User[]; meta: PaginationMeta }> => {
+    const params: { page: number; per_page: number; role?: string } = {
+      page,
+      per_page: perPage,
+    };
 
-    createUser: async (userData: Partial<User> & { password?: string, password_confirmation?: string }) => {
-        const response = await apiService.post('/users', { user: userData });
-        return response.data;
-    },
+    if (role) params.role = role;
 
-    updateUserStatus: async (id: string, status: string) => {
-        const response = await apiService.patch(`/users/${id}`, { user: { status } });
-        return response.data;
-    },
+    const response = await apiService.get("/users", params);
 
-    updateUser: async (id: string, userData: Partial<User>) => {
-        const response = await apiService.patch(`/users/${id}`, { user: userData });
-        return response.data;
-    },
+    const users: User[] = (response.data ?? []).map((user: any) => ({
+      id: String(user.id),
+      email: user.email ?? "",
+      role: user.role ?? "customer",
+      status: user.status ?? null,
+      created_at: user.created_at ?? null,
+      name: user.name ?? null,
+      phone: user.phone ?? null,
+      address: user.address ?? null,
+      loyalty_status: user.loyalty_status ?? null,
+      preferences: user.preferences ?? null,
+      artist_profile: user.artist_profile ?? null,
+      artist_profile_attributes: user.artist_profile_attributes ?? null,
+    }));
 
-    deleteUser: async (id: string) => {
-        const response = await apiService.delete(`/users/${id}`);
-        return response.data;
-    }
+    return {
+      data: users,
+      meta: response.meta ?? {
+        current_page: 1,
+        next_page: null,
+        prev_page: null,
+        total_pages: 1,
+        total_count: 0,
+      },
+    };
+  },
+
+  createUser: async (
+    userData: Partial<User> & {
+      password?: string;
+      password_confirmation?: string;
+    },
+  ) => {
+    const response = await apiService.post("/users", { user: userData });
+    return response.data;
+  },
+
+  updateUserStatus: async (id: string, status: string) => {
+    const response = await apiService.patch(`/users/${id}`, {
+      user: { status },
+    });
+    return response.data;
+  },
+
+  updateUser: async (id: string, userData: Partial<User>) => {
+    const response = await apiService.patch(`/users/${id}`, { user: userData });
+    return response.data;
+  },
+
+  deleteUser: async (id: string) => {
+    const response = await apiService.delete(`/users/${id}`);
+    return response.data;
+  },
 };

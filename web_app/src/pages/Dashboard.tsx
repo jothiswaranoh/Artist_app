@@ -9,7 +9,6 @@ import {
     ChevronRight,
     Star,
     Layers,
-    DollarSign,
     Sparkles,
     CalendarDays,
     Eye,
@@ -31,11 +30,14 @@ const Dashboard: React.FC = () => {
     const user = AuthService.getCurrentUser();
     const role = user?.role || 'customer';
     const displayName = user?.name || user?.email?.split('@')[0] || 'there';
-    const { bookings = [], isLoading: bookingsLoading } = useBookings();
+   const { bookings = [] } = useBookings(1);
    
     const recentBookings = [...bookings]
-  .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-  .slice(0, 3);
+      .sort(
+        (a: any, b: any) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      )
+      .slice(0, 3);
 
     // Stat cards per role
     const adminStatCards = [
@@ -71,7 +73,7 @@ const Dashboard: React.FC = () => {
         { icon: <Users size={18} />, title: 'Manage Users', desc: 'View and edit user accounts', color: '#9400D3', bg: 'rgba(148,0,211,0.12)', path: '/users' },
         { icon: <Sparkles size={18} />, title: 'Artists', desc: 'Browse all artist profiles', color: '#ED80E9', bg: 'rgba(237,128,233,0.12)', path: '/artists' },
         { icon: <CalendarCheck size={18} />, title: 'Bookings', desc: 'View all platform bookings', color: '#a78bfa', bg: 'rgba(167,139,250,0.12)', path: '/bookings' },
-        { icon: <TrendingUp size={18} />, title: 'Revenue', desc: 'Track platform earnings', color: '#34d399', bg: 'rgba(52,211,153,0.12)', path: '/services' },
+        { icon: <TrendingUp size={18} />, title: 'Revenue', desc: 'Track platform earnings', color: '#34d399', bg: 'rgba(52,211,153,0.12)', path: '/bookings' },
     ];
 
     const customerActions = [
@@ -277,14 +279,6 @@ function getTimeOfDay() {
     return 'evening';
 }
 
-function formatTimeAgo(dateString: string) {
-    const diff = Date.now() - new Date(dateString).getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    if (hours < 1) return 'Just now';
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    return `${days}d ago`;
-}
 
 function getStatusClass(status: string) {
     switch (status) {

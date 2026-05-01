@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from "react";
-import type { User } from "../services/UserService";
 import { useArtistProfiles } from "../hooks/useArtistProfiles";
 import type { ArtistProfile } from "../services/ArtistProfileService";
 import {
@@ -265,7 +264,7 @@ const ArtistsPage: React.FC = () => {
                     <p className="stat-lbl">Base Price</p>
                   </div>
                   <div className="artist-mini-stat">
-                    <p className="stat-val">{artist.services?.length || 0}</p>
+                    <p className="stat-val">{artist.services_count || 0}</p>
                     <p className="stat-lbl">Services</p>
                   </div>
                 </div>
@@ -324,7 +323,7 @@ const ArtistsPage: React.FC = () => {
               </thead>
 
               <tbody>
-                {artistProfiles.map((artist: ArtistProfile, i: number) => (
+                {artistProfiles.map((artist: ArtistProfile) => (
                   <tr key={artist.id} className="artist-row">
                     <td>
                       <div className="artist-cell-main">
