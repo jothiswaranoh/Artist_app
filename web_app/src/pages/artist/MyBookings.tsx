@@ -8,7 +8,6 @@ import {
   X,
   Calendar,
   Clock,
-  DollarSign,
   CheckCircle,
   XCircle,
   CalendarCheck,

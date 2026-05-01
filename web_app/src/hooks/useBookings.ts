@@ -2,11 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BookingService, type Booking } from "../services/BookingService";
 import { useToast } from "../components/common/Toast";
 
-export const useBookings = (page: number) => {
+export const useBookings = (page: number = 1) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["bookings", page],
     queryFn: async () => {
       const res = await BookingService.getAll(page, 10);

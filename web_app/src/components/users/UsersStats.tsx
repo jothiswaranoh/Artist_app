@@ -16,7 +16,7 @@ const UsersStats: React.FC<UsersStatsProps> = ({ users, meta }) => {
 
     const newUsersCount = useMemo(() => {
         return meta?.new_this_week_count ?? users.filter((u) => {
-            const createdDate = new Date(u.created_at);
+            const createdDate = new Date(u.created_at || '');
             const oneWeekAgo = new Date();
             oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
             return createdDate >= oneWeekAgo;

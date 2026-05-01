@@ -144,7 +144,7 @@ const UsersPage: React.FC = () => {
                     <td>
                       <div className="user-date-cell">
                         <Calendar size={13} />
-                        {new Date(user.created_at).toLocaleDateString('en-US', {
+                        {new Date(user.created_at || '').toLocaleDateString('en-US', {
                           month: 'short', day: 'numeric', year: 'numeric'
                         })}
                       </div>

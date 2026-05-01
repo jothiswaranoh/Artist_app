@@ -89,7 +89,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                     </div>
                                 </td>
                                 <td className="td-date">
-                                    {new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                    {new Date(user.created_at || '').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                 </td>
                                 <td>
                                     <div className="td-actions">
