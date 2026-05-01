@@ -35,24 +35,33 @@ export interface Booking {
 }
 
 export const BookingService = {
-    getAll: async () => {
-        const response = await apiService.get('/bookings');
-        return response.data;
-    },
-    getById: async (id: string) => {
-        const response = await apiService.get(`/bookings/${id}`);
-        return response.data;
-    },
-    create: async (data: Partial<Booking>) => {
-        const response = await apiService.post('/bookings', { booking: data });
-        return response.data;
-    },
-    update: async (id: string, data: Partial<Booking>) => {
-        const response = await apiService.patch(`/bookings/${id}`, { booking: data });
-        return response.data;
-    },
-    delete: async (id: string) => {
-        const response = await apiService.delete(`/bookings/${id}`);
-        return response.data;
-    }
+  getAll: async (page: number = 1, perPage: number = 10) => {
+    const response = await apiService.get("/bookings", {
+      page,
+      per_page: perPage,
+    });
+    return response;
+  },
+  getStats: async () => {
+    const response = await apiService.get("/bookings/stats");
+    return response;
+  },
+  getById: async (id: string) => {
+    const response = await apiService.get(`/bookings/${id}`);
+    return response.data;
+  },
+  create: async (data: Partial<Booking>) => {
+    const response = await apiService.post("/bookings", { booking: data });
+    return response.data;
+  },
+  update: async (id: string, data: Partial<Booking>) => {
+    const response = await apiService.patch(`/bookings/${id}`, {
+      booking: data,
+    });
+    return response.data;
+  },
+  delete: async (id: string) => {
+    const response = await apiService.delete(`/bookings/${id}`);
+    return response.data;
+  },
 };

@@ -94,6 +94,7 @@ const PasswordPage: React.FC = () => {
               type="password"
               name="current_password"
               className="password-input"
+              placeholder="Enter current password"
               value={formData.current_password}
               onChange={handleChange}
             />
@@ -104,6 +105,7 @@ const PasswordPage: React.FC = () => {
             <input
               type="password"
               name="new_password"
+              placeholder="Enter new password"
               className="password-input"
               value={formData.new_password}
               onChange={handleChange}
@@ -116,6 +118,7 @@ const PasswordPage: React.FC = () => {
               type="password"
               name="confirm_password"
               className="password-input"
+              placeholder="Confirm new password"
               value={formData.confirm_password}
               onChange={handleChange}
             />

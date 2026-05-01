@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useBookings } from "../../hooks/useBookings";
 import { AuthService } from "../../services/AuthService";
-import type { Booking } from "../../services/BookingService";
+import { BookingService, type Booking } from "../../services/BookingService";
 import {
   AlertCircle,
   Search,
@@ -18,6 +18,7 @@ import {
 import { motion } from "framer-motion";
 import "./ArtistPages.css";
 import { LayoutGrid, List } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 const STATUS_FILTERS = [
   "All",
@@ -28,15 +29,33 @@ const STATUS_FILTERS = [
 ];
 
 const MyBookingsPage: React.FC = () => {
+  const [page, setPage] = useState(1);
   const {
     bookings,
+    meta,
     isLoading,
     error,
     updateBooking,
     isUpdating,
     deleteBooking,
     isDeleting,
-  } = useBookings();
+  } = useBookings(page);
+
+  const { data: statsResponse } = useQuery({
+    queryKey: ["booking-stats"],
+    queryFn: async () => {
+      const res = await BookingService.getStats();
+      return res;
+    },
+  });
+
+  const stats = statsResponse?.data || {
+    total: 0,
+    pending: 0,
+    confirmed: 0,
+    completed: 0,
+    revenue: 0,
+  };
 
   const currentUser = AuthService.getCurrentUser();
   const isArtist = currentUser?.role === "artist";
@@ -45,7 +64,7 @@ const MyBookingsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [view, setView] = useState<"grid" | "list">("grid");
-  const filtered = useMemo(() => {
+  const filtered: Booking[] = useMemo(() => {
     return bookings.filter((b: Booking) => {
       const q = searchQuery.toLowerCase();
       const matchSearch =
@@ -55,21 +74,6 @@ const MyBookingsPage: React.FC = () => {
       return matchSearch && matchStatus;
     });
   }, [bookings, searchQuery, statusFilter]);
-
-  const stats = useMemo(
-    () => ({
-      total: bookings.length,
-      pending: bookings.filter((b: Booking) => b.status === "pending").length,
-      confirmed: bookings.filter((b: Booking) => b.status === "confirmed")
-        .length,
-      completed: bookings.filter((b: Booking) => b.status === "completed")
-        .length,
-      totalRevenue: bookings
-        .filter((b: Booking) => b.status === "completed")
-        .reduce((sum: number, b: Booking) => sum + (b.total_amount || 0), 0),
-    }),
-    [bookings],
-  );
 
   const handleStatusChange = (bookingId: string, newStatus: string) => {
     updateBooking({ id: bookingId, data: { status: newStatus } });
@@ -182,7 +186,7 @@ const MyBookingsPage: React.FC = () => {
           </div>
           <div>
             <p className="stat-label">Revenue</p>
-            <p className="stat-value">₹{stats.totalRevenue}</p>
+            <p className="stat-value">₹{stats.revenue}</p>
           </div>
         </motion.div>
       </div>
@@ -281,9 +285,7 @@ const MyBookingsPage: React.FC = () => {
                     {formatTime(booking.end_time)}
                   </span>
 
-                  <span className="detail-chip">
-                     ₹{booking.total_amount}
-                  </span>
+                  <span className="detail-chip">₹{booking.total_amount}</span>
                 </div>
                 <div className="item-card-footer">
                   <span className="meta-item">
@@ -482,10 +484,38 @@ const MyBookingsPage: React.FC = () => {
           </div>
         )}
 
-        {filtered.length > 0 && (
-          <div className="list-footer">
-            Showing <strong>{filtered.length}</strong> of{" "}
-            <strong>{bookings.length}</strong> bookings
+        {meta?.total_pages > 1 && (
+          <div className="pagination-footer">
+            <span>
+              Page {meta?.current_page} of {meta?.total_pages} —{" "}
+              {meta?.total_count} total bookings
+            </span>
+
+            <div className="pagination">
+              <button
+                disabled={!meta?.prev_page}
+                onClick={() => setPage(page - 1)}
+              >
+                ‹
+              </button>
+
+              {Array.from({ length: meta?.total_pages || 0 }, (_, i) => (
+                <button
+                  key={i}
+                  className={meta?.current_page === i + 1 ? "active" : ""}
+                  onClick={() => setPage(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                disabled={!meta?.next_page}
+                onClick={() => setPage(page + 1)}
+              >
+                ›
+              </button>
+            </div>
           </div>
         )}
       </div>
