@@ -10,7 +10,6 @@ import {
     Brush,
     ChevronLeft,
     ChevronRight,
-    Sun,
     Shield,
     Palette
 } from 'lucide-react';
@@ -53,9 +52,6 @@ const AdminLayout: React.FC = () => {
                 <div className="topbar-divider"></div>
                 <span className="breadcrumb">Admin / Users</span>
                 <div className="topbar-right">
-                    <button className="theme-toggle">
-                        <Sun size={18} />
-                    </button>
                     <div className="topbar-profile">
                         <div className="avatar-small">
                             {user?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'A'}

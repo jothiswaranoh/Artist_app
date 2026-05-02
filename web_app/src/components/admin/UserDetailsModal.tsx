@@ -74,63 +74,97 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({ user, onClose, onEd
     );
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="admin-modal-container" onClick={(e) => e.stopPropagation()}>
-                <div className="admin-modal-header">
-                    <h3>User Details</h3>
-                    <button className="close-btn" onClick={onClose}><X size={18} /></button>
-                </div>
+      <div className="modal-overlay" onClick={onClose}>
+        <div
+          className="admin-modal-container"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="admin-modal-header">
+            <h3>User Details</h3>
+            <button className="close-btn" onClick={onClose}>
+              <X size={18} />
+            </button>
+          </div>
 
-                <div className="admin-modal-body">
-                    {/* Common Details */}
-                    <div className="user-profile-header">
-                        <div className="large-avatar">{(user.name || user.email).charAt(0).toUpperCase()}</div>
-                        <div className="profile-titles">
-                            <h2>{user.name || user.email.split('@')[0]}</h2>
-                            <p className="id">ID: {user.id}</p>
-                            <span className={`badge badge-${user.role}`}>{user.role}</span>
-                        </div>
-                    </div>
-
-                    <div className="details-section">
-                        <h4 className="section-title">General Information</h4>
-                        <div className="details-grid">
-                            <div className="detail-item">
-                                <span className="label"><Mail size={12} /> Email</span>
-                                <span className="value truncate">{user.email}</span>
-                            </div>
-                            <div className="detail-item">
-                                <span className="label"><Phone size={12} /> Phone</span>
-                                <span className="value">{user.phone || 'N/A'}</span>
-                            </div>
-                            <div className="detail-item">
-                                <span className="label"><MapPin size={12} /> Address</span>
-                                <span className="value truncate">{user.address || 'N/A'}</span>
-                            </div>
-                            <div className="detail-item">
-                                <span className="label"><Calendar size={12} /> Member Since</span>
-                                <span className="value">{new Date(user.created_at || '').toLocaleDateString()}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Role Specific Fields */}
-                    {user.role === 'customer' && renderClientFields()}
-                    {user.role === 'artist' && renderArtistFields()}
-                    {user.role === 'admin' && (
-                        <div className="details-section">
-                            <h4 className="section-title">Admin Access</h4>
-                            <p className="description">This user has full administrative privileges over the application.</p>
-                        </div>
-                    )}
-                </div>
-
-                <div className="admin-modal-footer">
-                    <button className="btn-secondary" onClick={onClose}>Close</button>
-                    {onEdit && <button className="btn-primary" onClick={onEdit}>Edit User</button>}
-                </div>
+          <div className="admin-modal-body">
+            {/* Common Details */}
+            <div className="user-profile-header">
+              <div className="large-avatar">
+                {(user.name || user.email).charAt(0).toUpperCase()}
+              </div>
+              <div className="profile-titles">
+                <h2>{user.name || user.email.split("@")[0]}</h2>
+                <p className="id">ID: {user.id}</p>
+                <span className={`badge badge-${user.role}`}>{user.role}</span>
+              </div>
             </div>
+
+            <div className="details-section">
+              <h4 className="section-title">General Information</h4>
+              <div className="details-grid">
+                <div className="detail-item">
+                  <span className="label">
+                    <Mail size={12} /> Email
+                  </span>
+                  <span className="value truncate">{user.email}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="label">
+                    <Phone size={12} /> Phone
+                  </span>
+                  <span className="value">{user.phone || "N/A"}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="label">
+                    <MapPin size={12} /> Address
+                  </span>
+                  <span className="value truncate">
+                    {user.address || "N/A"}
+                  </span>
+                </div>
+                <div className="detail-item">
+                  <span className="label">
+                    <Calendar size={12} /> Member Since
+                  </span>
+                  <span className="value">
+                    {user.created_at
+                      ? new Date(user.created_at).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : "-"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Role Specific Fields */}
+            {user.role === "customer" && renderClientFields()}
+            {user.role === "artist" && renderArtistFields()}
+            {user.role === "admin" && (
+              <div className="details-section">
+                <h4 className="section-title">Admin Access</h4>
+                <p className="description">
+                  This user has full administrative privileges over the
+                  application.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="admin-modal-footer">
+            <button className="btn-secondary" onClick={onClose}>
+              Close
+            </button>
+            {onEdit && (
+              <button className="btn-primary" onClick={onEdit}>
+                Edit User
+              </button>
+            )}
+          </div>
         </div>
+      </div>
     );
 };
 

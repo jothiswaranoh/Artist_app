@@ -264,7 +264,7 @@ const ArtistsPage: React.FC = () => {
                     <p className="stat-lbl">Base Price</p>
                   </div>
                   <div className="artist-mini-stat">
-                    <p className="stat-val">{artist.services?.length || 0}</p>
+                    <p className="stat-val">{artist.services_count || 0}</p>
                     <p className="stat-lbl">Services</p>
                   </div>
                 </div>

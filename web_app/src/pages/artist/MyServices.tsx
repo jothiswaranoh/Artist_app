@@ -10,7 +10,6 @@ import {
   X,
   Layers,
   Clock,
-  DollarSign,
   Plus,
   Edit2,
   Trash2,
@@ -18,6 +17,7 @@ import {
   User,
   Save,
   CheckCircle,
+  IndianRupee,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./ArtistPages.css";
@@ -311,7 +311,7 @@ const MyServicesPage: React.FC = () => {
         </motion.div>
         <motion.div className="stat-card" whileHover={{ y: -2 }}>
           <div className="stat-icon green">
-            <DollarSign size={18} />
+            <IndianRupee size={18} />
           </div>
           <div>
             <p className="stat-label">Price Range</p>
