@@ -1,0 +1,204 @@
+/* Page container */
+.artist-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+/* Header */
+.artist-header {
+  margin-bottom: 30px;
+}
+
+.artist-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.artist-meta {
+  color: #9ca3af;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.artist-bio {
+  margin-top: 12px;
+  color: #d1d5db;
+  line-height: 1.6;
+}
+
+/* Layout */
+.artist-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+/* Cards */
+.card {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* Section titles */
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+/* Service list */
+.service-item {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.service-item:hover {
+  background: #1f2937;
+  border-color: #4f46e5;
+}
+
+.service-selected {
+  background: transparent;
+  border: 1.5px solid #6366f1;
+}
+
+.service-name {
+  font-weight: 600;
+  color: #fff;
+}
+
+.service-desc {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.service-price {
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Booking form */
+.booking-card {
+  position: sticky;
+  top: 20px;
+}
+
+.success-message {
+  background: #16a34a;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .artist-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.service-item {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.service-item:hover {
+  transform: translateY(-2px);
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.service-selected {
+  background: rgba(99, 102, 241, 0.15); /* soft indigo */
+  border: 1px solid #6366f1;
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3);
+}
+.service-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.service-price {
+  margin-top: 6px;
+  font-weight: 500;
+  color: #c7d2fe;
+}
+
+.service-item:hover {
+  transform: translateY(-2px);
+  border-color: #6366f1;
+}
+
+.service-item.service-selected:hover {
+  background: linear-gradient(135deg, #6366f1, #9333ea);
+  border: 2px solid #a78bfa;
+}
+
+.service-item:active {
+  transform: scale(0.97);
+}
+
+.service-item {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.artist-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.artist-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.artist-right {
+  position: sticky;
+  top: 20px;
+}
+
+.selected-service-preview {
+  background: rgba(255,255,255,0.05);
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 12px;
+}
+
+.booking-hint {
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+.selected-service-preview {
+  background: rgba(255,255,255,0.05);
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 12px;
+}
+
+.booking-hint {
+  opacity: 0.6;
+  font-size: 0.9rem;
+}

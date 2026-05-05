@@ -33,6 +33,7 @@ class Ability
       # Can browse artists and services
       can :read, ArtistProfile
       can :read, Service
+      can :read, Availability
       # Own reviews
       can :manage, Review, customer_id: user.id
       # Dashboard access

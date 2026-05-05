@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useArtistProfiles } from "../hooks/useArtistProfiles";
 import type { ArtistProfile } from "../services/ArtistProfileService";
+import { useNavigate } from "react-router-dom";
 import {
   AlertCircle,
   Search,
@@ -39,6 +40,7 @@ const ArtistsPage: React.FC = () => {
   const [editingArtist, setEditingArtist] = useState<ArtistProfile | null>(
     null,
   );
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const PER_PAGE = 10;
   const {
@@ -224,6 +226,8 @@ const ArtistsPage: React.FC = () => {
               <motion.div
                 key={artist.id}
                 className="artist-card"
+                onClick={() => navigate(`/artists/${artist.id}`)}
+                style={{ cursor: "pointer" }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05, duration: 0.3 }}
@@ -284,7 +288,7 @@ const ArtistsPage: React.FC = () => {
                     <button
                       className="artist-action-btn view"
                       title="View Details"
-                      onClick={() => setSelectedArtist(artist)}
+                      onClick={() => navigate(`/artists/${artist.id}`)}
                     >
                       <Eye size={14} />
                     </button>

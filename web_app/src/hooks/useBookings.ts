@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { BookingService, type Booking } from "../services/BookingService";
+import { BookingService, type Booking, type CreateBookingPayload  } from "../services/BookingService";
 import { useToast } from "../components/common/Toast";
 
 export const useBookings = (page: number = 1) => {
@@ -22,7 +22,7 @@ export const useBookings = (page: number = 1) => {
     queryClient.invalidateQueries({ queryKey: ["bookings"] });
   
   const createMutation = useMutation({
-    mutationFn: (data: Partial<Booking>) => BookingService.create(data),
+    mutationFn: (data: CreateBookingPayload) => BookingService.create(data),
     onSuccess: () => {
       invalidate();
       showToast("Booking created successfully", "success");

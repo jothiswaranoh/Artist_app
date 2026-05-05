@@ -1,4 +1,5 @@
 import { apiService } from './api';
+import type { ArtistDetail, AvailabilitySlot } from '../types/artist.types';
 
 export interface ArtistProfile {
     id: string;
@@ -23,17 +24,30 @@ export interface ArtistProfile {
 }
 
 export const ArtistProfileService = {
-// ArtistProfileService.ts
+  // ArtistProfileService.ts
+  getArtistDetail: async (id: string): Promise<ArtistDetail> => {
+    const response = await apiService.get<ArtistDetail>(`/artists/${id}`);
+    // response.data is ArtistDetail based on your ApiResponse<T> wrapper
+    if (!response.data) throw new Error("Artist not found");
+    return response.data;
+  },
 
-getAll: async (page?: number, perPage?: number, search?: string) => {
-  const response = await apiService.get('/artist_profiles', {
-  page,
-  per_page: perPage,
-  search
-  });
+  getArtistAvailability: async (id: string): Promise<AvailabilitySlot[]> => {
+    const response = await apiService.get<AvailabilitySlot[]>(
+      `/artists/${id}/availability`,
+    );
+    // data may be null if no availability set — safe fallback to []
+    return response.data ?? [];
+  },
+  getAll: async (page?: number, perPage?: number, search?: string) => {
+    const response = await apiService.get("/artist_profiles", {
+      page,
+      per_page: perPage,
+      search,
+    });
 
-  return response; 
-},
+    return response;
+  },
   getById: async (id: string) => {
     const response = await apiService.get(`/artist_profiles/${id}`);
     return response.data;

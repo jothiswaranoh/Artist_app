@@ -2,10 +2,12 @@ module Api
   module V1
     class AvailabilitiesController < ApplicationController
       include Crudable
-      load_and_authorize_resource class: 'Availability'
+      load_and_authorize_resource class: 'Availability', except: [:artist_availability]
 
       def artist_availability
-        profile = ArtistProfile.find(params[:artist_id])
+        profile = ArtistProfile.find_by(id: params[:id])
+        return render_error(message: "Artist not found", status: :not_found) unless profile
+        authorize! :read, Availability
         slots = Availability.where(artist_profile_id: profile.id)
                             .where("available_date >= ?", Date.today)
                             .where(is_booked: false)
