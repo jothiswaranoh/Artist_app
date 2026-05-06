@@ -56,6 +56,8 @@ module Api
         reviews =
         if current_user.admin?
            base_scope
+        elsif current_user.artist?
+           base_scope.where(artist_profile_id: current_user.artist_profile.id)
         elsif params[:artist_profile_id]
            base_scope.where(artist_profile_id: params[:artist_profile_id])
         elsif current_user.customer?

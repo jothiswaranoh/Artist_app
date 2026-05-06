@@ -34,6 +34,13 @@ export interface Booking {
     };
 }
 
+export interface CreateBookingPayload {
+  service_id: string;
+  booking_date: string;
+  start_time: string;
+  end_time: string;
+}
+
 export const BookingService = {
   getAll: async (page: number = 1, perPage: number = 10) => {
     const response = await apiService.get("/bookings", {
@@ -42,6 +49,7 @@ export const BookingService = {
     });
     return response;
   },
+  
   getStats: async () => {
     const response = await apiService.get("/bookings/stats");
     return response;
@@ -50,7 +58,7 @@ export const BookingService = {
     const response = await apiService.get(`/bookings/${id}`);
     return response.data;
   },
-  create: async (data: Partial<Booking>) => {
+  create: async (data: CreateBookingPayload) => {
     const response = await apiService.post("/bookings", { booking: data });
     return response.data;
   },

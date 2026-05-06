@@ -18,14 +18,14 @@ const SettingsPage: React.FC = () => {
             title: 'Account',
             items: [
                 { icon: <User size={16} />, label: 'Profile', description: 'Manage your profile details', action: () => navigate('/settings/profile') },
-                { icon: <Mail size={16} />, label: 'Email', description: user?.email || 'No email set', action: () => {} },
+                { icon: <Mail size={16} />, label: 'Email', description: user?.email || 'No email set', action: () => navigate('/settings/email') },
             ]
         },
         {
             title: 'Preferences',
             items: [
                 { icon: <Bell size={16} />, label: 'Notifications', description: 'Manage notification settings', action: () => {} },
-                { icon: <Palette size={16} />, label: 'Appearance', description: 'Wisteria bloom theme', action: () => {} },
+                { icon: <Palette size={16} />, label: 'Appearance', description: 'Wisteria bloom theme',  action: () => {} },
             ]
         },
         {

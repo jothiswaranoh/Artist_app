@@ -1,0 +1,39 @@
+.availability-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.availability-card {
+  background: #1f2937;
+  border: 1px solid #374151;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.availability-card:hover {
+  border-color: #8b5cf6;
+}
+
+.availability-card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.availability-date {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.availability-time {
+  font-size: 14px;
+  color: white;
+  font-weight: 500;
+}
+
+.availability-status {
+  font-size: 11px;
+  color: #f87171;
+}

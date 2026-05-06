@@ -137,7 +137,7 @@ module Api
       private
 
       def booking_params
-        params.require(:booking).permit(:artist_profile_id, :service_id, :booking_date, :start_time, :end_time, :total_amount, :status)
+        params.require(:booking).permit(:service_id, :booking_date, :start_time, :end_time)
       end
 
       def resource_params

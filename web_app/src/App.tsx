@@ -19,6 +19,8 @@ import { ToastProvider } from './components/common/Toast';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import ProfilePage from './pages/settings/ProfilePage';
 import PasswordPage from './pages/settings/PasswordPage';
+import EmailSettings from './pages/settings/EmailSettings';
+import ArtistDetailPage from './pages/customer/ArtistDetail';
 
 const queryClient = new QueryClient();
 
@@ -76,6 +78,7 @@ function App() {
 
               {/* Customer-only Pages */}
               <Route path="find-artists" element={<ErrorBoundary><RoleGuard allowedRoles={['customer']}><BrowseArtistsPage /></RoleGuard></ErrorBoundary>} />
+              <Route path="artists/:id" element={<ErrorBoundary><RoleGuard allowedRoles={['customer', 'admin']}><ArtistDetailPage /></RoleGuard></ErrorBoundary>} />
 
               {/* Admin routes for services/bookings/reviews (admin sees all) */}
               <Route path="services" element={<ErrorBoundary><RoleGuard allowedRoles={['admin']}><MyServicesPage /></RoleGuard></ErrorBoundary>} />
@@ -84,8 +87,9 @@ function App() {
 
               {/* Shared Pages */}
               <Route path="settings" element={<SettingsPage />} />
-              <Route path="/settings/profile" element={<ProfilePage />} />
-              <Route path="/settings/password" element={<PasswordPage />} />
+              <Route path="settings/profile" element={<ProfilePage />} />
+              <Route path="settings/password" element={<PasswordPage />} />
+              <Route path="settings/email" element={<EmailSettings />} />
             </Route>
           </Routes>
         </BrowserRouter>
