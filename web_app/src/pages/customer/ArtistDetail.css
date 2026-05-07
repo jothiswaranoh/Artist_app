@@ -1,167 +1,125 @@
-/* Page container */
-.artist-page {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 20px;
+/* ===== ROOT VARIABLES ===== */
+:root {
+  --header-height: 80px;
 }
 
-/* Header */
+/* ===== PAGE CONTAINER ===== */
+.artist-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+/* ===== STATES ===== */
+.loading-state,
+.error-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 16px;
+}
+
+.error-state {
+  flex-direction: column;
+  gap: 16px;
+}
+
+.error-button {
+  padding: 8px 16px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.error-button:hover {
+  background: #4f46e5;
+}
+
+/* ===== SUCCESS BANNER ===== */
+.success-banner {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  z-index: 50;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+/* ===== HEADER ===== */
 .artist-header {
-  margin-bottom: 30px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #374151;
 }
 
 .artist-title {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 700;
-  color: #ffffff;
+  color: #fff;
+  margin-bottom: 6px;
 }
 
 .artist-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: #9ca3af;
-  margin-top: 6px;
   font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.meta-dot {
+  opacity: 0.5;
+}
+
+.artist-stats {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #9ca3af;
+  text-transform: uppercase;
 }
 
 .artist-bio {
-  margin-top: 12px;
   color: #d1d5db;
+  font-size: 14px;
   line-height: 1.6;
+  max-width: 600px;
 }
 
-/* Layout */
-.artist-layout {
+/* ===== MAIN LAYOUT ===== */
+.artist-main {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-}
-
-/* Cards */
-.card {
-  background: #111827;
-  border: 1px solid #374151;
-  border-radius: 12px;
-  padding: 20px;
-}
-
-/* Section titles */
-.section-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #ffffff;
-}
-
-/* Service list */
-.service-item {
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.service-item:hover {
-  background: #1f2937;
-  border-color: #4f46e5;
-}
-
-.service-selected {
-  background: transparent;
-  border: 1.5px solid #6366f1;
-}
-
-.service-name {
-  font-weight: 600;
-  color: #fff;
-}
-
-.service-desc {
-  font-size: 13px;
-  color: #9ca3af;
-}
-
-.service-price {
-  font-weight: 600;
-  margin-top: 4px;
-}
-
-/* Booking form */
-.booking-card {
-  position: sticky;
-  top: 20px;
-}
-
-.success-message {
-  background: #16a34a;
-  color: white;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .artist-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-.service-item {
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid #374151;
-  margin-bottom: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.service-item:hover {
-  transform: translateY(-2px);
-  border-color: #6366f1;
-  background: rgba(99, 102, 241, 0.1);
-}
-
-.service-selected {
-  background: rgba(99, 102, 241, 0.15); /* soft indigo */
-  border: 1px solid #6366f1;
-  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3);
-}
-.service-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.service-price {
-  margin-top: 6px;
-  font-weight: 500;
-  color: #c7d2fe;
-}
-
-.service-item:hover {
-  transform: translateY(-2px);
-  border-color: #6366f1;
-}
-
-.service-item.service-selected:hover {
-  background: linear-gradient(135deg, #6366f1, #9333ea);
-  border: 2px solid #a78bfa;
-}
-
-.service-item:active {
-  transform: scale(0.97);
-}
-
-.service-item {
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.artist-layout {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: minmax(0, 1fr) 380px;
   gap: 32px;
   align-items: start;
 }
@@ -169,36 +127,206 @@
 .artist-left {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
 }
 
 .artist-right {
   position: sticky;
-  top: 20px;
+  top: calc(var(--header-height) + 10px);
 }
 
-.selected-service-preview {
-  background: rgba(255,255,255,0.05);
-  padding: 10px 12px;
+/* ===== SECTION ===== */
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 18px;
+}
+
+/* ===== SERVICES ===== */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.service-card {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.service-card:hover {
+  border-color: #6366f1;
+  transform: translateY(-1px);
+  background: #111827;
+}
+
+.service-card--selected {
+  border: 2px solid #6366f1;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.15),
+    rgba(147, 51, 234, 0.12)
+  );
+}
+
+.service-card__checkmark {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #6366f1;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-card__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.service-card__desc {
+  font-size: 12px;
+  color: #9ca3af;
+  flex-grow: 1;
+}
+
+.service-card__footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid #374151;
+}
+
+.service-card__price {
+  font-weight: 700;
+  color: #c7d2fe;
+}
+
+.service-card__duration {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* ===== REVIEWS ===== */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.review-card {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 10px;
+  padding: 14px;
+  transition: all 0.2s ease;
+}
+
+.review-card:hover {
+  border-color: #6366f1;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.review-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.rating-stars {
+  font-size: 14px;
+}
+
+.rating-value {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.review-card__date {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.review-card__comment {
+  font-size: 13px;
+  color: #d1d5db;
+}
+
+/* ===== EMPTY ===== */
+.empty-state {
+  text-align: center;
+  padding: 28px;
+  color: #9ca3af;
+  background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.08);
-  margin-bottom: 12px;
 }
 
-.booking-hint {
-  opacity: 0.6;
-  font-size: 0.9rem;
+/* ===== BOOKING CARD ===== */
+.booking-card {
+  background: linear-gradient(145deg, #1f2937, #111827);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
 }
 
-.selected-service-preview {
-  background: rgba(255,255,255,0.05);
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.08);
-  margin-bottom: 12px;
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .artist-main {
+    grid-template-columns: 1fr 340px;
+  }
 }
 
-.booking-hint {
-  opacity: 0.6;
-  font-size: 0.9rem;
+@media (max-width: 768px) {
+  .artist-main {
+    grid-template-columns: 1fr;
+  }
+
+  .artist-right {
+    position: static;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artist-title {
+    font-size: 24px;
+  }
+}
+
+.review-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #e5e7eb;
 }

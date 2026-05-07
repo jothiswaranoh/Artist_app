@@ -1,3 +1,5 @@
+// src/components/artist/BookingForm.tsx
+
 import './BookingForm.css';
 
 import type {
@@ -13,9 +15,9 @@ interface Props {
     value: string
   ) => void;
   onSubmit: () => void;
+  submitting?: boolean;
 }
 
-// Helper
 const getError = (
   errors: BookingValidationError[],
   field: BookingValidationError['field']
@@ -26,76 +28,120 @@ export default function BookingForm({
   errors,
   onChange,
   onSubmit,
+  submitting = false,
 }: Props) {
+  const isFormValid =
+    form.selectedService &&
+    form.selectedDate &&
+    form.startTime &&
+    form.endTime &&
+    errors.length === 0;
+
   return (
-    <div className="booking-card">
-      <h2 className="booking-title">Book this Artist</h2>
+    <div className="booking-form">
+      <h2 className="booking-form__title">Request Booking</h2>
+
+      {/* SELECTED SERVICE */}
       {form.selectedService ? (
-        <div className="selected-service-preview">
-          <strong>{form.selectedService.name}</strong>
-          <span>
-            ${form.selectedService.price} •{" "}
-            {form.selectedService.duration_minutes} min
-          </span>
+        <div className="booking-form__selected">
+          <div className="booking-form__selected-icon">📌</div>
+          <div className="booking-form__selected-content">
+            <p className="booking-form__selected-name">
+              {form.selectedService.name}
+            </p>
+            <p className="booking-form__selected-meta">
+              ₹{Number(form.selectedService.price).toFixed(2)} · {form.selectedService.duration_minutes} min
+            </p>
+          </div>
         </div>
       ) : (
-        <p className="booking-hint">Select a service to start booking</p>
+        <div className="booking-form__hint">
+          ← Select a service above to start booking
+        </div>
       )}
 
-      {getError(errors, "service") && (
-        <p className="booking-error">{getError(errors, "service")}</p>
+      {getError(errors, 'service') && (
+        <div className="booking-form__error">
+          {getError(errors, 'service')}
+        </div>
       )}
 
-      {/* Date */}
-      <div className="booking-input-group">
-        <label className="booking-label">Date</label>
+      {/* DATE INPUT */}
+      <div className="booking-form__group">
+        <label className="booking-form__label">Date</label>
         <input
           type="date"
           value={form.selectedDate}
-          min={new Date().toISOString().split("T")[0]}
-          onChange={(e) => onChange("selectedDate", e.target.value)}
-          className="booking-input"
+          min={new Date().toISOString().split('T')[0]}
+          onChange={(e) => onChange('selectedDate', e.target.value)}
+          className="booking-form__input"
+          disabled={!form.selectedService}
         />
-        {getError(errors, "date") && (
-          <p className="booking-error">{getError(errors, "date")}</p>
+        {getError(errors, 'date') && (
+          <div className="booking-form__error-inline">
+            {getError(errors, 'date')}
+          </div>
         )}
       </div>
 
-      {/* Time Row */}
-      <div className="booking-time-row">
-        {/* Start */}
-        <div className="booking-input-group">
-          <label className="booking-label">Start Time</label>
+      {/* TIME ROW */}
+      <div className="booking-form__time-row">
+        {/* START TIME */}
+        <div className="booking-form__group">
+          <label className="booking-form__label">Start Time</label>
           <input
             type="time"
             value={form.startTime}
-            onChange={(e) => onChange("startTime", e.target.value)}
-            className="booking-input"
+            onChange={(e) => onChange('startTime', e.target.value)}
+            className="booking-form__input"
+            disabled={!form.selectedService}
           />
-          {getError(errors, "startTime") && (
-            <p className="booking-error">{getError(errors, "startTime")}</p>
+          {getError(errors, 'startTime') && (
+            <div className="booking-form__error-inline">
+              {getError(errors, 'startTime')}
+            </div>
           )}
         </div>
 
-        {/* End */}
-        <div className="booking-input-group">
-          <label className="booking-label">End Time</label>
+        {/* END TIME */}
+        <div className="booking-form__group">
+          <label className="booking-form__label">End Time</label>
           <input
             type="time"
             value={form.endTime}
-            onChange={(e) => onChange("endTime", e.target.value)}
-            className="booking-input"
+            readOnly
+            className="booking-form__input booking-form__input--readonly"
+            title="Auto-calculated based on service duration"
           />
-          {getError(errors, "endTime") && (
-            <p className="booking-error">{getError(errors, "endTime")}</p>
+          {getError(errors, 'endTime') && (
+            <div className="booking-form__error-inline">
+              {getError(errors, 'endTime')}
+            </div>
           )}
         </div>
       </div>
 
-      {/* Submit */}
-      <button onClick={onSubmit} className="booking-button">
-        Request Booking
+      {/* SUBMIT BUTTON */}
+      <button
+        onClick={onSubmit}
+        disabled={!isFormValid || submitting}
+        className={`booking-form__button ${
+          isFormValid ? 'booking-form__button--active' : ''
+        }`}
+      >
+        {submitting ? (
+          <>
+            <span className="booking-form__spinner"></span>
+            Booking...
+          </>
+        ) : (
+          'Request Booking'
+        )}
       </button>
+
+      <p className="booking-form__footer">
+        You'll receive a confirmation email once the artist accepts your booking.
+      </p>
     </div>
   );
 }

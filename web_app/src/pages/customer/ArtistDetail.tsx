@@ -35,7 +35,9 @@ export default function ArtistDetailPage() {
     endTime: "",
   });
 
-  const [validationErrors, setValidationErrors] = useState<BookingValidationError[]>([]);
+  const [validationErrors, setValidationErrors] = useState<
+    BookingValidationError[]
+  >([]);
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -104,20 +106,54 @@ export default function ArtistDetailPage() {
 
   // --- Handlers ---
   const handleServiceSelect = (service: ArtistService) => {
-    setBookingForm((prev) => ({
-      ...prev,
-      selectedService: service,
-    }));
+    setBookingForm((prev) => {
+      const updated = {
+        ...prev,
+        selectedService: service,
+      };
+
+      if (prev.startTime) {
+        updated.endTime = addMinutes(
+          prev.startTime,
+          Number(service.duration_minutes),
+        );
+      }
+
+      return updated;
+    });
 
     setValidationErrors((prev) => prev.filter((e) => e.field !== "service"));
   };
 
   const handleFormChange = (
     field: keyof Omit<BookingFormState, "selectedService">,
-    value: string
+    value: string,
   ) => {
-    setBookingForm((prev) => ({ ...prev, [field]: value }));
+    setBookingForm((prev) => {
+      const updated = { ...prev, [field]: value };
+      if (field === "startTime" && prev.selectedService && value) {
+        updated.endTime = addMinutes(
+          value,
+          Number(prev.selectedService.duration_minutes),
+        );
+      }
+
+      return updated;
+    });
+
     setValidationErrors((prev) => prev.filter((e) => e.field !== field));
+  };
+
+  const addMinutes = (time: string, minutes: number) => {
+    const [h, m] = time.split(":").map(Number);
+    const date = new Date();
+    date.setHours(h);
+    date.setMinutes(m + minutes);
+
+    const hh = String(date.getHours()).padStart(2, "0");
+    const mm = String(date.getMinutes()).padStart(2, "0");
+
+    return `${hh}:${mm}`;
   };
 
   const handleBookingSubmit = async () => {
@@ -139,7 +175,7 @@ export default function ArtistDetailPage() {
         end_time: bookingForm.endTime,
       });
 
-      setSuccessMessage("Booking created successfully");
+      setSuccessMessage("Booking created successfully! Check your bookings.");
 
       setBookingForm({
         selectedService: null,
@@ -148,10 +184,15 @@ export default function ArtistDetailPage() {
         endTime: "",
       });
 
-    } catch (err: any) {
-      const message =
-        err?.response?.data?.message || "Booking failed";
+      setValidationErrors([]);
 
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 4000);
+    } catch (err: any) {
+      const message = err?.message || "Booking failed. Please try again.";
       setValidationErrors([{ field: "service", message }]);
     } finally {
       setSubmitting(false);
@@ -160,97 +201,198 @@ export default function ArtistDetailPage() {
 
   // --- UI states ---
   if (loading) {
-    return <div className="artist-page">Loading...</div>;
+    return (
+      <div className="artist-page">
+        <div className="loading-state">Loading artist...</div>
+      </div>
+    );
   }
 
   if (error) {
     return (
       <div className="artist-page">
-        <p style={{ color: "red" }}>{error}</p>
+        <div className="error-state">
+          <p>{error}</p>
+          <button
+            onClick={() => navigate("/find-artists")}
+            className="error-button"
+          >
+            Back to artists
+          </button>
+        </div>
       </div>
     );
   }
 
   if (!artist) return null;
 
+  const sortedReviews = artist.reviews
+    ? [...artist.reviews].sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      )
+    : [];
+
+  const avgRating =
+    artist.reviews && artist.reviews.length > 0
+      ? artist.reviews.reduce((sum, r) => sum + r.rating, 0) /
+        artist.reviews.length
+      : 0;
+
   return (
     <div className="artist-page">
+      {/* SUCCESS BANNER */}
+      {successMessage && (
+        <div className="success-banner">
+          <span>✓</span>
+          {successMessage}
+        </div>
+      )}
 
       {/* HEADER */}
       <div className="artist-header">
-        <h1 className="artist-title">
-          {artist.name || artist.email}
-        </h1>
+        <h1 className="artist-title">{artist.name || artist.email}</h1>
 
         <div className="artist-meta">
-          {artist.city} · {artist.experience_years} yrs experience
+          {artist.city && <span>{artist.city}</span>}
+          {artist.city && <span className="meta-dot">·</span>}
+          <span>{artist.experience_years} yrs experience</span>
         </div>
 
         <div className="artist-stats">
-          <span>{artist.services_count} services</span>
-          <span>{artist.reviews_count} reviews</span>
+          <div className="stat-item">
+            <span className="stat-value">{artist.services_count}</span>
+            <span className="stat-label">Services</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-value">{artist.reviews_count}</span>
+            <span className="stat-label">Reviews</span>
+          </div>
         </div>
 
-        {artist.bio && (
-          <p className="artist-bio">{artist.bio}</p>
-        )}
+        {artist.bio && <p className="artist-bio">{artist.bio}</p>}
       </div>
 
-      {/* MAIN */}
-      <div className="artist-layout">
-
+      {/* CONTENT SECTIONS */}
+      <div className="artist-main">
         {/* LEFT */}
-        <div>
-
+        <div className="artist-left">
           {/* SERVICES */}
-          <div className="card">
+          <section className="section">
             <h2 className="section-title">Services</h2>
 
-            {artist.services.map((service) => {
-              const selected =
-                bookingForm.selectedService?.id === service.id;
+            {artist.services && artist.services.length > 0 ? (
+              <div className="services-grid">
+                {artist.services.map((service) => {
+                  const selected =
+                    bookingForm.selectedService?.id === service.id;
 
-              return (
-                <div
-                  key={service.id}
-                  className={`service-item ${
-                    selected ? "service-selected" : ""
-                  }`}
-                  onClick={() => handleServiceSelect(service)}
-                >
-                  <div className="service-name">{service.name}</div>
-                  <div className="service-desc">
-                    {service.description}
-                  </div>
-                  <div className="service-price">
-                    ${parseFloat(service.price).toFixed(2)} ·{" "}
-                    {service.duration_minutes} min
-                  </div>
+                  return (
+                    <div
+                      key={service.id}
+                      className={`service-card ${selected ? "service-card--selected" : ""}`}
+                      onClick={() => handleServiceSelect(service)}
+                    >
+                      {selected && (
+                        <div className="service-card__checkmark">✓</div>
+                      )}
+
+                      <h3 className="service-card__name">{service.name}</h3>
+                      <p className="service-card__desc">
+                        {service.description}
+                      </p>
+
+                      <div className="service-card__footer">
+                        <span className="service-card__price">
+                          ₹{Number(service.price).toFixed(2)}
+                        </span>
+                        <span className="service-card__duration">
+                          {service.duration_minutes} min
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="empty-state">No services available.</div>
+            )}
+          </section>
+
+          {/* REVIEWS */}
+          {/* REVIEWS */}
+          {artist.reviews && artist.reviews.length > 0 && (
+            <section className="section">
+              <h2 className="section-title">Reviews</h2>
+
+              <div className="reviews-summary">
+                <div className="summary-left">
+                  <span className="summary-stars">
+                    {"⭐".repeat(Math.round(avgRating))}
+                  </span>
+                  <span className="summary-value">{avgRating.toFixed(1)}</span>
                 </div>
-              );
-            })}
-          </div>
 
-          {/* AVAILABILITY (placeholder for now) */}
-          <div className="card" style={{ marginTop: 20 }}>
-            <h2 className="section-title">Availability</h2>
-            <p className="service-desc">
-              No availability set. You can still request a booking.
-            </p>
-          </div>
+                <span className="summary-count">
+                  {artist.reviews.length} reviews
+                </span>
+              </div>
 
+              <div className="reviews-list">
+                {sortedReviews.map((review) => (
+                  <div key={review.id} className="review-card">
+                    <div className="review-card__header">
+                      <div className="review-card__user">
+                        <div className="review-avatar">
+                          {review.id.slice(0, 2).toUpperCase()}
+                        </div>
+
+                        <div className="review-user-meta">
+                          <div className="review-user-name">
+                            {`User ${review.id.slice(0, 4)}`}
+                          </div>
+
+                          <div className="review-card__rating">
+                            <span className="rating-stars">
+                              {"⭐".repeat(review.rating)}
+                            </span>
+                            <span className="rating-value">
+                              {review.rating}/5
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <span className="review-card__date">
+                        {new Date(review.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          },
+                        )}
+                      </span>
+                    </div>
+
+                    <p className="review-comment">{review.comment}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
 
         {/* RIGHT */}
-        <div className="card booking-card">
+        <div className="artist-right">
           <BookingForm
             form={bookingForm}
             errors={validationErrors}
             onChange={handleFormChange}
             onSubmit={handleBookingSubmit}
+            submitting={submitting}
           />
         </div>
-
       </div>
     </div>
   );
